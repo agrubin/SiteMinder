@@ -88,7 +88,7 @@ namespace pmsXchange
     }
 
     //
-    // The service connection is implemeted as a singleton so it is only instantiated and initalized one time
+    // The service connection implemeted as a singleton so it is only instantiated and initalized one time
     // upon the first access, then the same connection is returned on each subsequent access.  Use only for
     // synchronous calls.
     //
@@ -100,6 +100,29 @@ namespace pmsXchange
         public PmsXchangeServiceClient service { get; private set; }
 
         private ServiceConnection()
+        {
+            InitializeService();
+        }
+
+        public void InitializeService()
+        {
+            BasicHttpBinding binding = new BasicHttpBinding();
+            binding.Security.Mode = BasicHttpSecurityMode.Transport;
+
+            EndpointAddress address = new EndpointAddress(endpointURI);
+            service = new PmsXchangeServiceClient(binding, address);
+        }
+    }
+
+    //
+    // The service connection implemeted as a class, creates a new connectione very time it's instantiated. Use only for asynchronous calls.
+    //
+    public sealed class AsyncServiceConnection
+    {
+        private const string endpointURI = "https://cmtpi.siteminder.com/pmsxchangev2/services/SPIORANGE";  // Provided by SiteMinder.
+        public PmsXchangeServiceClient service { get; private set; }
+
+        public AsyncServiceConnection()
         {
             InitializeService();
         }
@@ -134,7 +157,8 @@ namespace pmsXchange
 
             try
             {
-                PmsXchangeServiceClient service = new PmsXchangeServiceClient();
+                PmsXchangeServiceClient service = new AsyncServiceConnection().service;
+
                 OTA_ReadRQ readRequestBody = new OTA_ReadRQ();
                 readRequestBody.Version = 1.0M;
                 readRequestBody.EchoToken = Guid.NewGuid().ToString();  // Echo token must be unique.            
@@ -186,7 +210,7 @@ namespace pmsXchange
 
             try
             {
-                PmsXchangeServiceClient service = new PmsXchangeServiceClient();
+                PmsXchangeServiceClient service = new AsyncServiceConnection().service;
 
                 OTA_PingRQ pingRequestBody = new OTA_PingRQ();
                 pingRequestBody.Version = 1.0M;

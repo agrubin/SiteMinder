@@ -5,8 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OTA_Console"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
+        Title="OTA Console" Height="450" Width="525">
+    <Grid Margin="0,0,0,0" Height="450" VerticalAlignment="Top">
+        <Button x:Name="button_Ping" Content="OTA__PingRS" HorizontalAlignment="Left" Margin="20,25,0,0" VerticalAlignment="Top" Width="90" Click="button_Ping_Click"/>
+        <TextBox x:Name="textBox_Ping" HorizontalAlignment="Left" Height="23" Margin="120,25,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <ListBox x:Name="listBox_Errors" HorizontalAlignment="Left" Height="52" Margin="20,320,0,0" VerticalAlignment="Top" Width="477" Grid.ColumnSpan="2"/>
+        <TextBlock x:Name="textBlock_Ping" HorizontalAlignment="Left" Margin="120,10,0,0" TextWrapping="Wrap" Text="Response" VerticalAlignment="Top"/>
+        <TextBlock x:Name="textBlock_Errors" HorizontalAlignment="Left" Margin="20,304,0,0" TextWrapping="Wrap" Text="OTA Errors" VerticalAlignment="Top"/>
+
     </Grid>
 </Window>
