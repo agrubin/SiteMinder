@@ -183,7 +183,11 @@ namespace pmsXchange
                 hotelReadRequest.SelectionCriteria = selectionCriteria;
                 readRequestBody.ReadRequests = readRequests;
 
-                response = await service.ReadRQAsync(CreateSecurityHeader(usernameAuthenticate, passwordAuthenticate), readRequestBody);
+                //
+                // Send a retrieve reservations request.
+                //
+
+                response = await service.ReadRQAsync(CreateSecurityHeader(usernameAuthenticate, passwordAuthenticate), readRequestBody).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -197,14 +201,10 @@ namespace pmsXchange
                 response.OTA_ResRetrieveRS.Items = new object[] { errors };
             }
 
-            //
-            // Send a retrieve reservations request.
-            //
-
             return response;
         }
 
-        static public async Task<PingRQResponse> OTA_PingRS(string usernameAuthenticate, string passwordAuthenticate)
+        static public async Task<PingRQResponse> OTA_PingRQ(string usernameAuthenticate, string passwordAuthenticate)
         {
             PingRQResponse response = null;
 
@@ -223,7 +223,7 @@ namespace pmsXchange
                 // Send an asynchronous ping request.
                 //
 
-                response = await service.PingRQAsync(CreateSecurityHeader(usernameAuthenticate, passwordAuthenticate), pingRequestBody);
+                response = await service.PingRQAsync(CreateSecurityHeader(usernameAuthenticate, passwordAuthenticate), pingRequestBody).ConfigureAwait(false);
             }
             catch(Exception ex)
             {

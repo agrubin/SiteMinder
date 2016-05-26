@@ -28,6 +28,8 @@ namespace OTA_Console
         const string pmsID = "SPIORANGE";
         const string hotelCode = "SPI516";
 
+        public ResStatus resStatus { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -35,19 +37,21 @@ namespace OTA_Console
 
         private async void button_Ping_Click(object sender, RoutedEventArgs e)
         {
-            //OTA_ResRetrieveRS reservationsResponse = API.OTA_ReadRQ(pmsID, username, password, hotelCode, ResStatus.All);
             textBox_Ping.Text = "Sending...";
-            PingRQResponse pingResponse = await API.OTA_PingRS(username, password);
+            PingRQResponse pingResponse = await API.OTA_PingRQ(username, password);
             if (pingResponse.OTA_PingRS.Items[0].GetType() == typeof(SuccessType))
             {
                 textBox_Ping.Text = pingResponse.OTA_PingRS.Items[1].ToString();
             }
             else
             {
+                string timestamp = pingResponse.OTA_PingRS.TimeStamp.ToString();
                 ErrorsType errors = (ErrorsType)pingResponse.OTA_PingRS.Items[0];
                 foreach (var error in errors.Error)
                 {
-                    string errLine = string.Format("OTA_PingRS error - Type:{0} Value:{1}", error.Type, error.Value);
+                    textBox_Ping.Text = "Error";
+                    string errLine = string.Format("OTA_PingRS error - Timestamp: {2}  Type: {0}  Value: {1}", error.Type, error.Value, timestamp);
+                    listBox_Errors.Items.Add(errLine);
                 }
             }
 
@@ -55,8 +59,9 @@ namespace OTA_Console
             //ReservationError resErr = new ReservationError(ERR.Hotel_not_active, EWT.Processing_exception, "hello");        
         }
 
-        private void button_Ping_Click_1(object sender, RoutedEventArgs e)
+        private async void button_Read_Click(object sender, RoutedEventArgs e)
         {
+            //ReadRQResponse reservationsResponse = await API.OTA_ReadRQ(pmsID, username, password, hotelCode, ResStatus.All);
 
         }
     }
