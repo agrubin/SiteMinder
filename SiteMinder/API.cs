@@ -26,7 +26,8 @@ namespace pmsXchange
     }
 
     // EWT      Error Type              Description
-    // ---      ----------              -----------      
+    // ---      ----------              -----------  
+    //    
     // 1	    Unknown                 Indicates an unknown error.
     // 3	    Biz rule                Indicates that the XML message has passed a low-level validation check, but that the business rules for the request message were not met.
     // 4	    Authentication          Indicates the message lacks adequate security credentials.
@@ -47,6 +48,7 @@ namespace pmsXchange
 
     //  ERR     Error Code                                      Description
     //  ---     ----------                                      -----------
+    //
     //  249     Invalid rate code                               Rate does not exist.
     //  375     Hotel not active                                Hotel is not enabled to receive inventory updates.
     //  385     Invalid confirmation or cancellation number     Confirmation or cancellation number does not exist.
