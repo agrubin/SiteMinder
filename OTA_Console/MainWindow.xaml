@@ -13,7 +13,9 @@
             <ColumnDefinition Width="248*"/>
         </Grid.ColumnDefinitions>
         <Button x:Name="button_Ping" Content="OTA__PingRQ" HorizontalAlignment="Left" Margin="2.6,28,0,0" VerticalAlignment="Top" Width="101" Click="button_Ping_Click" Grid.Column="1" Height="23"/>
-        <TextBox x:Name="textBox_Ping" HorizontalAlignment="Left" Height="23" Margin="108.6,28,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="239" Grid.Column="1"/>
+        <Border HorizontalAlignment="Left" Height="23" Margin="108.6,28,0,0" VerticalAlignment="Top" Width="239" Grid.Column="1" BorderBrush="#FF382828" BorderThickness="1">
+            <TextBlock x:Name="textBlock_Ping" TextWrapping="Wrap" Text="" Margin="0,0,-0.6,0.2"/>
+        </Border>
         <ListBox x:Name="listBox_Errors" HorizontalAlignment="Left" Height="120" Margin="2.6,293,0,0" VerticalAlignment="Top" Width="477" Grid.Column="1">
             <ListBox.ItemContainerStyle>
                 <Style TargetType="{x:Type ListBoxItem}">
@@ -21,20 +23,18 @@
                 </Style>
             </ListBox.ItemContainerStyle>
         </ListBox>
-        <TextBlock x:Name="textBlock_Ping" HorizontalAlignment="Left" Margin="108.6,7,0,0" TextWrapping="Wrap" Text="Response" VerticalAlignment="Top" Grid.Column="1" Height="16" Width="51"/>
+        <TextBlock x:Name="textBlock_Response" HorizontalAlignment="Left" Margin="108.6,7,0,0" TextWrapping="Wrap" Text="Response" VerticalAlignment="Top" Grid.Column="1" Height="16" Width="51"/>
         <TextBlock x:Name="textBlock_Errors" HorizontalAlignment="Left" Margin="2.6,272,0,0" TextWrapping="Wrap" Text="OTA Errors" VerticalAlignment="Top" Height="16" Grid.Column="1" Width="122"/>
         <Button x:Name="button_Read" Content="OTA__ReadRQ" HorizontalAlignment="Left" Margin="22,68,0,0" VerticalAlignment="Top" Width="101" Click="button_Read_Click" Height="23" Grid.ColumnSpan="2"/>
-        <Border Grid.Column="1" Margin="108.6,69,57.4,359" BorderBrush="#FF382828" BorderThickness="2">
-            <StackPanel Margin="2.4,8.4,8.2,2.8">
-                <StackPanel.Resources>
-                    <local:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
-                </StackPanel.Resources>
-                <RadioButton Height="18"  IsChecked="{Binding resStatus, ConverterParameter={x:Static t:ResStatus.All}, Converter={StaticResource EnumToBooleanConverter}}" Content="All" Margin="5,0,259.6,0" />
-                <RadioButton Height="18"  IsChecked="{Binding resStatus, ConverterParameter={x:Static t:ResStatus.Book}, Converter={StaticResource EnumToBooleanConverter}}" Content="Book" Margin="5,0,244.6,0" />
-                <RadioButton Height="18"  IsChecked="{Binding resStatus, ConverterParameter={x:Static t:ResStatus.Modify}, Converter={StaticResource EnumToBooleanConverter}}" Content="Modify" Margin="5,0,239.8,0" />
-                <RadioButton Height="18"  IsChecked="{Binding resStatus, ConverterParameter={x:Static t:ResStatus.Cancel}, Converter={StaticResource EnumToBooleanConverter}}" Content="Cancel" Margin="5,0,239.8,0" />
-
+        <Border Height="24" VerticalAlignment="Bottom" Margin="110.6,0,0,427" Grid.Column="1" HorizontalAlignment="Left" Width="256" BorderBrush="Black" BorderThickness="1">
+            <StackPanel Orientation="Horizontal" Margin="2,2,-0.4,0">
+                <RadioButton x:Name="radioButton_All" Height="18"  IsChecked="True" Content="All" Width="65"  />
+                <RadioButton x:Name="radioButton_Book" Height="18"   Content="Book" Width="65"  />
+                <RadioButton x:Name="radioButton_Modify" Height="18"   Content="Modify" Width="65"  />
+                <RadioButton x:Name="radioButton_Cancel" Height="18"   Content="Cancel" Width="65"  />
             </StackPanel>
+
         </Border>
+
     </Grid>
 </Window>

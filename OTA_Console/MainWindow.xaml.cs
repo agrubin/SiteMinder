@@ -28,8 +28,6 @@ namespace OTA_Console
         const string pmsID = "SPIORANGE";
         const string hotelCode = "SPI516";
 
-        public ResStatus resStatus { get; set; }
-
         public MainWindow()
         {
             InitializeComponent();
@@ -37,11 +35,11 @@ namespace OTA_Console
 
         private async void button_Ping_Click(object sender, RoutedEventArgs e)
         {
-            textBox_Ping.Text = "Sending...";
+            textBlock_Ping.Text = "Sending...";
             PingRQResponse pingResponse = await API.OTA_PingRQ(username, password);
             if (pingResponse.OTA_PingRS.Items[0].GetType() == typeof(SuccessType))
             {
-                textBox_Ping.Text = pingResponse.OTA_PingRS.Items[1].ToString();
+                textBlock_Ping.Text = pingResponse.OTA_PingRS.Items[1].ToString();
             }
             else
             {
@@ -49,7 +47,7 @@ namespace OTA_Console
                 ErrorsType errors = (ErrorsType)pingResponse.OTA_PingRS.Items[0];
                 foreach (var error in errors.Error)
                 {
-                    textBox_Ping.Text = "Error";
+                    textBlock_Ping.Text = "Error";
                     string errLine = string.Format("OTA_PingRS error - Timestamp: {2}  Type: {0}  Value: {1}", error.Type, error.Value, timestamp);
                     listBox_Errors.Items.Add(errLine);
                 }
@@ -61,8 +59,22 @@ namespace OTA_Console
 
         private async void button_Read_Click(object sender, RoutedEventArgs e)
         {
-            //ReadRQResponse reservationsResponse = await API.OTA_ReadRQ(pmsID, username, password, hotelCode, ResStatus.All);
-
+            ReadRQResponse reservationsResponse = await API.OTA_ReadRQ(pmsID, username, password, hotelCode, ResStatus.All);
+            if (reservationsResponse.OTA_ResRetrieveRS.Items[0].GetType() == typeof(SuccessType))
+            {
+                // Got the reservation list....
+                //reservationsResponse.OTA_ResRetrieveRS.Items[1];
+            }
+            else
+            {
+                string timestamp = reservationsResponse.OTA_ResRetrieveRS.TimeStamp.ToString();
+                ErrorsType errors = (ErrorsType)reservationsResponse.OTA_ResRetrieveRS.Items[0];
+                foreach (var error in errors.Error)
+                {
+                    string errLine = string.Format("OTA_ResRetrieveRS error - Timestamp: {2}  Type: {0}  Value: {1}", error.Type, error.Value, timestamp);
+                    listBox_Errors.Items.Add(errLine);
+                }
+            }
         }
     }
 }
