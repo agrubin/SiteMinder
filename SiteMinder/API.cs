@@ -48,7 +48,6 @@ namespace pmsXchange
 
     //  ERR     Error Code                                      Description
     //  ---     ----------                                      -----------
-    //
     //  249     Invalid rate code                               Rate does not exist.
     //  375     Hotel not active                                Hotel is not enabled to receive inventory updates.
     //  385     Invalid confirmation or cancellation number     Confirmation or cancellation number does not exist.
