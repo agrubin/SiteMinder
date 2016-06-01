@@ -193,13 +193,8 @@ namespace pmsXchange
             catch (Exception ex)
             {
                 response = new ReadRQResponse();
-                ErrorsType errors = new ErrorsType();
-                ErrorType[] error = new ErrorType[1];
-                error[0] = new ErrorType();
-                error[0].Type = EWT.Processing_exception.ToString();
-                error[0].Value = ex.Message;
                 response.OTA_ResRetrieveRS = new OTA_ResRetrieveRS();
-                response.OTA_ResRetrieveRS.Items = new object[] { errors };
+                response.OTA_ResRetrieveRS.Items = new object[] { ProcessingException(ex) };
             }
 
             return response;
@@ -228,17 +223,29 @@ namespace pmsXchange
             }
             catch(Exception ex)
             {
+                //
+                // Add a single error block to the response with a processing exception in case of an unusual error condition.
+                //
+
                 response = new PingRQResponse();
-                ErrorsType errors =  new ErrorsType();
-                ErrorType [] error = new ErrorType[1];
-                error[0] = new ErrorType();
-                error[0].Type = EWT.Processing_exception.ToString();
-                error[0].Value = ex.Message;
                 response.OTA_PingRS = new OTA_PingRS();
-                response.OTA_PingRS.Items = new object[] { errors };
+                response.OTA_PingRS.Items = new object[] { ProcessingException(ex) };
             }
 
             return response;
+        }
+
+        //
+        // Create an error block with a single undefined processing exception.
+        //
+        private static ErrorsType ProcessingException(Exception ex)
+        {
+            ErrorsType errors = new ErrorsType();
+            ErrorType[] error = new ErrorType[1];
+            error[0] = new ErrorType();
+            error[0].Type = EWT.Processing_exception.ToString();
+            error[0].Value = ex.Message;
+            return errors;
         }
 
         static private SecurityHeaderType CreateSecurityHeader(string usernameAuthenticate, string passwordAuthenticate)

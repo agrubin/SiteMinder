@@ -24,7 +24,7 @@ namespace OTA_Console
     public partial class MainWindow : Window
     {
         const string username = "SPIOrangeTest";
-        const string password = "ymdqMsjBNutXLQMdVvtJZVXe";
+        const string password = "ymdqMsjBNutXLQMdVvtJZVXe9";
         const string pmsID = "SPIORANGE";
         const string hotelCode = "SPI516";
 
