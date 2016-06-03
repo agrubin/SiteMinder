@@ -143,15 +143,31 @@ namespace pmsXchange
         private const string requestorIDType = "22";  // This value is provided by SiteMinder.
         private const string textType = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText";
 
-        static public void OTA_NotifReportRQ(string usernameAuthenticate, string passwordAuthenticate)
+        static public async Task<NotifReportRQResponse> OTA_NotifReportRQ(string usernameAuthenticate, string passwordAuthenticate)
         {
-            PmsXchangeServiceClient service = new PmsXchangeServiceClient();
+            NotifReportRQResponse response = null;
 
-            OTA_NotifReportRQ otaRequestBody = new OTA_NotifReportRQ();
+            try
+            {
+                PmsXchangeServiceClient service = new AsyncServiceConnection().service;
 
-            service.NotifReportRQ(CreateSecurityHeader(usernameAuthenticate, passwordAuthenticate), otaRequestBody);
+                OTA_NotifReportRQ notifReportRequestBody = new OTA_NotifReportRQ();
+                notifReportRequestBody.Version = 1.0M;
+                notifReportRequestBody.EchoToken = Guid.NewGuid().ToString();  // Echo token must be unique.            
+                notifReportRequestBody.TimeStamp = DateTime.Now;
+                notifReportRequestBody.TimeStampSpecified = true;
+
+                response = await service.NotifReportRQAsync(CreateSecurityHeader(usernameAuthenticate, passwordAuthenticate), notifReportRequestBody).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                response = new NotifReportRQResponse();
+                response.OTA_NotifReportRS = new MessageAcknowledgementType();
+                response.OTA_NotifReportRS.Items = new object[] { ProcessingException(ex) };
+            }
+
+            return response;
         }
-
         static public async Task<ReadRQResponse> OTA_ReadRQ(string pmsID, string usernameAuthenticate, string passwordAuthenticate, string hotelCode, ResStatus resStatus)
         {
             ReadRQResponse response = null;

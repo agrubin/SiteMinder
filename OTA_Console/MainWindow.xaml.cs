@@ -24,7 +24,7 @@ namespace OTA_Console
     public partial class MainWindow : Window
     {
         const string username = "SPIOrangeTest";
-        const string password = "ymdqMsjBNutXLQMdVvtJZVXe9";
+        const string password = "ymdqMsjBNutXLQMdVvtJZVXe";
         const string pmsID = "SPIORANGE";
         const string hotelCode = "SPI516";
 
@@ -62,8 +62,31 @@ namespace OTA_Console
             ReadRQResponse reservationsResponse = await API.OTA_ReadRQ(pmsID, username, password, hotelCode, ResStatus.All);
             if (reservationsResponse.OTA_ResRetrieveRS.Items[0].GetType() == typeof(SuccessType))
             {
+                //
                 // Got the reservation list....
-                //reservationsResponse.OTA_ResRetrieveRS.Items[1];
+                //
+
+                OTA_ResRetrieveRSReservationsList reservationList = (OTA_ResRetrieveRSReservationsList)reservationsResponse.OTA_ResRetrieveRS.Items[1];
+
+                try
+                {
+                    foreach (HotelReservationType hotelReservation in reservationList?.Items)
+                    {
+
+                    }
+                }
+                catch
+                {
+                    //
+                    // No reservations even though the request processed succesfully.
+                    //
+                }
+
+                //
+                // Send a reservation confirmation.
+                //
+
+
             }
             else
             {
