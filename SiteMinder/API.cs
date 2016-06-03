@@ -143,7 +143,7 @@ namespace pmsXchange
         private const string requestorIDType = "22";  // This value is provided by SiteMinder.
         private const string textType = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText";
 
-        static public async Task<NotifReportRQResponse> OTA_NotifReportRQ(string usernameAuthenticate, string passwordAuthenticate, OTA_ResRetrieveRSReservationsList reservationList)
+        static public async Task<NotifReportRQResponse> OTA_NotifReportRQ(string usernameAuthenticate, string passwordAuthenticate, string resStatus, DateTime dateTimeStamp, string msgID, string resIDPMS)
         {
             NotifReportRQResponse response = null;
 
@@ -160,8 +160,39 @@ namespace pmsXchange
                 body.Items = new object[] { new SuccessType() };
                 body.NotifDetails = new OTA_NotifReportRQNotifDetails();
                 body.NotifDetails.HotelNotifReport = new OTA_NotifReportRQNotifDetailsHotelNotifReport();
-                body.NotifDetails.HotelNotifReport.Item = new OTA_NotifReportRQNotifDetailsHotelNotifReportHotelReservations();
+                OTA_NotifReportRQNotifDetailsHotelNotifReportHotelReservations hotelReservations = new OTA_NotifReportRQNotifDetailsHotelNotifReportHotelReservations();
+                body.NotifDetails.HotelNotifReport.Item = hotelReservations;
 
+                //
+                // The following line of code will return an array of nulls!!!!
+                //
+
+                OTA_NotifReportRQNotifDetailsHotelNotifReportHotelReservationsHotelReservation[] hotelReservationList = new OTA_NotifReportRQNotifDetailsHotelNotifReportHotelReservationsHotelReservation[1];
+
+     
+                hotelReservations.HotelReservation = hotelReservationList;
+
+                //
+                // Error here becuase of a null refernece exception.  I checked the WSDL, and don't see why this is happening.
+                //
+
+                hotelReservations.HotelReservation[0].ResStatus = resStatus;
+                if (resStatus == "Book")
+                {
+                    hotelReservations.HotelReservation[0].CreateDateTime = dateTimeStamp;
+                }
+                else
+                {
+                    hotelReservations.HotelReservation[0].LastModifyDateTime = dateTimeStamp;
+                }
+                hotelReservations.HotelReservation[0].UniqueID = new UniqueID_Type[1];
+                hotelReservations.HotelReservation[0].UniqueID[0].Type = "16";
+                hotelReservations.HotelReservation[0].UniqueID[0].ID = msgID;
+                hotelReservations.HotelReservation[0].ResGlobalInfo.HotelReservationIDs = new HotelReservationIDsTypeHotelReservationID[1];
+                hotelReservations.HotelReservation[0].ResGlobalInfo.HotelReservationIDs[0].ResID_Type = "14";
+                hotelReservations.HotelReservation[0].ResGlobalInfo.HotelReservationIDs[0].ResID_Value = resIDPMS;
+
+                body.NotifDetails.HotelNotifReport.Item = hotelReservations;
                 response = await service.NotifReportRQAsync(CreateSecurityHeader(usernameAuthenticate, passwordAuthenticate), body).ConfigureAwait(false);
             }
             catch (Exception ex)

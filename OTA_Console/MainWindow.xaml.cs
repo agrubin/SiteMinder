@@ -77,21 +77,24 @@ namespace OTA_Console
                         // Get the pmsXchange reservation reference.
                         //
 
-                        UniqueID_Type [] uniqueIDs = hotelReservation.UniqueID;
+                        UniqueID_Type[] uniqueIDs = hotelReservation.UniqueID;
                         string resType = uniqueIDs[0].Type;
                         string resIDPMS = uniqueIDs[0].ID;
                         string resIDContext = uniqueIDs[0].ID_Context;
 
                         string msgType = uniqueIDs[1].Type;
-                        string msgIDPMS = uniqueIDs[1].ID;
-                        string msgIDContext = uniqueIDs[1].ID_Context;  
+                        string msgID = uniqueIDs[1].ID;
+                        string msgIDContext = uniqueIDs[1].ID_Context;
+
+                        string resStatus = hotelReservation.ResStatus;
+                        DateTime dateTimeStamp = resStatus == "Book" ? hotelReservation.CreateDateTime : hotelReservation.LastModifyDateTime;
+
+                        //
+                        // Send a reservation confirmation.
+                        //
+
+                        NotifReportRQResponse confirmResponse = await API.OTA_NotifReportRQ(username, password, resStatus, dateTimeStamp, msgID, resIDPMS);
                     }
-
-                    //
-                    // Send a reservation confirmation.
-                    //
-
-                    NotifReportRQResponse confirmResponse = await API.OTA_NotifReportRQ(username, password, reservationList);
                 }
     
 
