@@ -60,31 +60,42 @@ namespace OTA_Console
         private async void button_Read_Click(object sender, RoutedEventArgs e)
         {
             ReadRQResponse reservationsResponse = await API.OTA_ReadRQ(pmsID, username, password, hotelCode, ResStatus.All);
+
             if (reservationsResponse.OTA_ResRetrieveRS.Items[0].GetType() == typeof(SuccessType))
             {
                 //
-                // Got the reservation list....
+                // Got the reservation list, so now process it....
                 //
 
-                OTA_ResRetrieveRSReservationsList reservationList = (OTA_ResRetrieveRSReservationsList)reservationsResponse.OTA_ResRetrieveRS.Items[1];
-
-                try
+                OTA_ResRetrieveRSReservationsList reservationList = (OTA_ResRetrieveRSReservationsList)reservationsResponse.OTA_ResRetrieveRS?.Items[1];
+                
+                if(reservationList != null)
                 {
-                    foreach (HotelReservationType hotelReservation in reservationList?.Items)
+                    foreach (HotelReservationType hotelReservation in reservationList.Items)
                     {
+                        //
+                        // Get the pmsXchange reservation reference.
+                        //
 
+                        UniqueID_Type [] uniqueIDs = hotelReservation.UniqueID;
+                        string resType = uniqueIDs[0].Type;
+                        string resIDPMS = uniqueIDs[0].ID;
+                        string resIDContext = uniqueIDs[0].ID_Context;
+
+                        string msgType = uniqueIDs[1].Type;
+                        string msgIDPMS = uniqueIDs[1].ID;
+                        string msgIDContext = uniqueIDs[1].ID_Context;  
                     }
-                }
-                catch
-                {
-                    //
-                    // No reservations even though the request processed succesfully.
-                    //
-                }
 
-                //
-                // Send a reservation confirmation.
-                //
+                    //
+                    // Send a reservation confirmation.
+                    //
+
+                    NotifReportRQResponse confirmResponse = await API.OTA_NotifReportRQ(username, password, reservationList);
+                }
+    
+
+
 
 
             }

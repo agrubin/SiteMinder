@@ -143,7 +143,7 @@ namespace pmsXchange
         private const string requestorIDType = "22";  // This value is provided by SiteMinder.
         private const string textType = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText";
 
-        static public async Task<NotifReportRQResponse> OTA_NotifReportRQ(string usernameAuthenticate, string passwordAuthenticate)
+        static public async Task<NotifReportRQResponse> OTA_NotifReportRQ(string usernameAuthenticate, string passwordAuthenticate, OTA_ResRetrieveRSReservationsList reservationList)
         {
             NotifReportRQResponse response = null;
 
@@ -151,13 +151,18 @@ namespace pmsXchange
             {
                 PmsXchangeServiceClient service = new AsyncServiceConnection().service;
 
-                OTA_NotifReportRQ notifReportRequestBody = new OTA_NotifReportRQ();
-                notifReportRequestBody.Version = 1.0M;
-                notifReportRequestBody.EchoToken = Guid.NewGuid().ToString();  // Echo token must be unique.            
-                notifReportRequestBody.TimeStamp = DateTime.Now;
-                notifReportRequestBody.TimeStampSpecified = true;
+                OTA_NotifReportRQ body = new OTA_NotifReportRQ();
+                body.Version = 1.0M;
+                body.EchoToken = Guid.NewGuid().ToString();  // Echo token must be unique.            
+                body.TimeStamp = DateTime.Now;
+                body.TimeStampSpecified = true;
 
-                response = await service.NotifReportRQAsync(CreateSecurityHeader(usernameAuthenticate, passwordAuthenticate), notifReportRequestBody).ConfigureAwait(false);
+                body.Items = new object[] { new SuccessType() };
+                body.NotifDetails = new OTA_NotifReportRQNotifDetails();
+                body.NotifDetails.HotelNotifReport = new OTA_NotifReportRQNotifDetailsHotelNotifReport();
+                body.NotifDetails.HotelNotifReport.Item = new OTA_NotifReportRQNotifDetailsHotelNotifReportHotelReservations();
+
+                response = await service.NotifReportRQAsync(CreateSecurityHeader(usernameAuthenticate, passwordAuthenticate), body).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -176,12 +181,12 @@ namespace pmsXchange
             {
                 PmsXchangeServiceClient service = new AsyncServiceConnection().service;
 
-                OTA_ReadRQ readRequestBody = new OTA_ReadRQ();
-                readRequestBody.Version = 1.0M;
-                readRequestBody.EchoToken = Guid.NewGuid().ToString();  // Echo token must be unique.            
-                readRequestBody.TimeStamp = DateTime.Now;
-                readRequestBody.TimeStampSpecified = true;
-                readRequestBody.POS = CreatePOS(pmsID);
+                OTA_ReadRQ body = new OTA_ReadRQ();
+                body.Version = 1.0M;
+                body.EchoToken = Guid.NewGuid().ToString();  // Echo token must be unique.            
+                body.TimeStamp = DateTime.Now;
+                body.TimeStampSpecified = true;
+                body.POS = CreatePOS(pmsID);
 
                 OTA_ReadRQReadRequests readRequests = new OTA_ReadRQReadRequests();
                 OTA_ReadRQReadRequestsHotelReadRequest hotelReadRequest = new OTA_ReadRQReadRequestsHotelReadRequest();
@@ -198,13 +203,13 @@ namespace pmsXchange
                 }
 
                 hotelReadRequest.SelectionCriteria = selectionCriteria;
-                readRequestBody.ReadRequests = readRequests;
+                body.ReadRequests = readRequests;
 
                 //
                 // Send a retrieve reservations request.
                 //
 
-                response = await service.ReadRQAsync(CreateSecurityHeader(usernameAuthenticate, passwordAuthenticate), readRequestBody).ConfigureAwait(false);
+                response = await service.ReadRQAsync(CreateSecurityHeader(usernameAuthenticate, passwordAuthenticate), body).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -224,18 +229,18 @@ namespace pmsXchange
             {
                 PmsXchangeServiceClient service = new AsyncServiceConnection().service;
 
-                OTA_PingRQ pingRequestBody = new OTA_PingRQ();
-                pingRequestBody.Version = 1.0M;
-                pingRequestBody.EchoToken = Guid.NewGuid().ToString();  // Echo token must be unique.            
-                pingRequestBody.TimeStamp = DateTime.Now;
-                pingRequestBody.TimeStampSpecified = true;
-                pingRequestBody.EchoData = "good echo";
+                OTA_PingRQ body = new OTA_PingRQ();
+                body.Version = 1.0M;
+                body.EchoToken = Guid.NewGuid().ToString();  // Echo token must be unique.            
+                body.TimeStamp = DateTime.Now;
+                body.TimeStampSpecified = true;
+                body.EchoData = "good echo";
                 
                 //
                 // Send an asynchronous ping request.
                 //
 
-                response = await service.PingRQAsync(CreateSecurityHeader(usernameAuthenticate, passwordAuthenticate), pingRequestBody).ConfigureAwait(false);
+                response = await service.PingRQAsync(CreateSecurityHeader(usernameAuthenticate, passwordAuthenticate), body).ConfigureAwait(false);
             }
             catch(Exception ex)
             {
@@ -310,6 +315,14 @@ namespace pmsXchange
             usernametoken.AppendChild(password);
 
             return new XmlElement[] { usernametoken };
+        }
+
+        static private System.Xml.XmlElement[] CreateHotelReservations()
+        {
+            XmlDocument doc = new XmlDocument();
+            XmlElement hotelReservations = doc.CreateElement("HotelReservations");
+
+            return new XmlElement[] { hotelReservations };
         }
     }
 }
