@@ -163,18 +163,10 @@ namespace pmsXchange
                 OTA_NotifReportRQNotifDetailsHotelNotifReportHotelReservations hotelReservations = new OTA_NotifReportRQNotifDetailsHotelNotifReportHotelReservations();
                 body.NotifDetails.HotelNotifReport.Item = hotelReservations;
 
-                //
-                // The following line of code will return an array of nulls!!!!
-                //
-
                 OTA_NotifReportRQNotifDetailsHotelNotifReportHotelReservationsHotelReservation[] hotelReservationList = new OTA_NotifReportRQNotifDetailsHotelNotifReportHotelReservationsHotelReservation[1];
-
+                hotelReservationList[0] = new OTA_NotifReportRQNotifDetailsHotelNotifReportHotelReservationsHotelReservation();
      
                 hotelReservations.HotelReservation = hotelReservationList;
-
-                //
-                // Error here becuase of a null refernece exception.  I checked the WSDL, and don't see why this is happening.
-                //
 
                 hotelReservations.HotelReservation[0].ResStatus = resStatus;
                 if (resStatus == "Book")
@@ -186,9 +178,12 @@ namespace pmsXchange
                     hotelReservations.HotelReservation[0].LastModifyDateTime = dateTimeStamp;
                 }
                 hotelReservations.HotelReservation[0].UniqueID = new UniqueID_Type[1];
+                hotelReservations.HotelReservation[0].UniqueID[0] = new UniqueID_Type();
                 hotelReservations.HotelReservation[0].UniqueID[0].Type = "16";
                 hotelReservations.HotelReservation[0].UniqueID[0].ID = msgID;
+                hotelReservations.HotelReservation[0].ResGlobalInfo = new ResGlobalInfoType();
                 hotelReservations.HotelReservation[0].ResGlobalInfo.HotelReservationIDs = new HotelReservationIDsTypeHotelReservationID[1];
+                hotelReservations.HotelReservation[0].ResGlobalInfo.HotelReservationIDs[0] = new HotelReservationIDsTypeHotelReservationID();
                 hotelReservations.HotelReservation[0].ResGlobalInfo.HotelReservationIDs[0].ResID_Type = "14";
                 hotelReservations.HotelReservation[0].ResGlobalInfo.HotelReservationIDs[0].ResID_Value = resIDPMS;
 
@@ -297,6 +292,7 @@ namespace pmsXchange
             error[0] = new ErrorType();
             error[0].Type = EWT.Processing_exception.ToString();
             error[0].Value = ex.Message;
+            errors.Error = error;
             return errors;
         }
 

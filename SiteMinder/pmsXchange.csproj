@@ -62,16 +62,7 @@
     <None Include="Service References\pmsXchangeService\SiteMinder.pmsXchangeService.HotelRateAmountNotifRQResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\pmsXchangeService\SiteMinder.pmsXchangeService.MessageAcknowledgementType.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
     <None Include="Service References\pmsXchangeService\SiteMinder.pmsXchangeService.NotifReportRQResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\pmsXchangeService\SiteMinder.pmsXchangeService.OTA_PingRS.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\pmsXchangeService\SiteMinder.pmsXchangeService.OTA_ResRetrieveRS.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\pmsXchangeService\SiteMinder.pmsXchangeService.PingRQResponse.datasource">
