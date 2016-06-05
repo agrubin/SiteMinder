@@ -120,16 +120,16 @@ namespace pmsXchange
         public OTA_ERR err { get; set; }
         public OTA_EWT ewt { get; set; }
         public string errorText { get; set; }
-        public ReservationError(OTA_ERR _err, OTA_EWT _ewt, string _errorText)
+        public ReservationError(OTA_ERR errOTA, OTA_EWT ewtOTA, string errText)
         {
-            err = _err;
-            ewt = _ewt;
+            err = errOTA;
+            ewt = ewtOTA;
 
             //
             // Since this text is going into an XML node, invalid chars must be escaped with XML entities.
             //
 
-            string xml = _errorText;
+            string xml = errText;
             errorText = xml.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
         }
     }
@@ -188,7 +188,7 @@ namespace pmsXchange
     {
         private const string textType = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText";
 
-        static public async Task<NotifReportRQResponse> OTA_NotifReportRQ(string usernameAuthenticate, string passwordAuthenticate, ErrorType errorType, string resStatus, DateTime dateTimeStamp, string msgID, string resIDPMS)
+        static public async Task<NotifReportRQResponse> OTA_NotifReportRQ(string usernameAuthenticate, string passwordAuthenticate, ReservationError resError, string resStatus, DateTime dateTimeStamp, string msgID, string resIDPMS)
         {
             NotifReportRQResponse response = null;
 
@@ -201,12 +201,14 @@ namespace pmsXchange
                 body.EchoToken = Guid.NewGuid().ToString();  // Echo token must be unique.            
                 body.TimeStamp = DateTime.Now;
                 body.TimeStampSpecified = true;
-                if (errorType == null)
+                if (resError == null)
                 {
                     body.Items = new object[] { new SuccessType() };
                 }
                 else
                 {
+                    ErrorType errorType = API.CreateErrorType(resError.err, resError.ewt, resError.errorText);
+
                     ErrorsType errors = new ErrorsType();
                     ErrorType[] error = { errorType };
                     errors.Error = error;
@@ -235,19 +237,19 @@ namespace pmsXchange
                 }
                 hotelReservations.HotelReservation[0].UniqueID = new UniqueID_Type[1];
                 hotelReservations.HotelReservation[0].UniqueID[0] = new UniqueID_Type();
-                hotelReservations.HotelReservation[0].UniqueID[0].Type = OTA_ID_Type.Reference.ToString();
+                hotelReservations.HotelReservation[0].UniqueID[0].Type = OTA_ID_Type.Reference.ToString("d");
                 hotelReservations.HotelReservation[0].UniqueID[0].ID = msgID;
 
                 //
                 // Only include the reservation ID info if there was no error processin this reservation.
                 //
 
-                if (errorType == null)
+                if (resError == null)
                 {
                     hotelReservations.HotelReservation[0].ResGlobalInfo = new ResGlobalInfoType();
                     hotelReservations.HotelReservation[0].ResGlobalInfo.HotelReservationIDs = new HotelReservationIDsTypeHotelReservationID[1];
                     hotelReservations.HotelReservation[0].ResGlobalInfo.HotelReservationIDs[0] = new HotelReservationIDsTypeHotelReservationID();
-                    hotelReservations.HotelReservation[0].ResGlobalInfo.HotelReservationIDs[0].ResID_Type = OTA_ID_Type.Reservation.ToString();
+                    hotelReservations.HotelReservation[0].ResGlobalInfo.HotelReservationIDs[0].ResID_Type = OTA_ID_Type.Reservation.ToString("d");
                     hotelReservations.HotelReservation[0].ResGlobalInfo.HotelReservationIDs[0].ResID_Value = resIDPMS;
                 }
 
@@ -351,13 +353,13 @@ namespace pmsXchange
         private static ErrorsType ProcessingException(Exception ex)
         {
             ErrorsType errors = new ErrorsType();
-            ErrorType[] error = { CreateErrorType(OTA_EWT.Processing_exception, OTA_ERR.System_error, ex.Message) };
+            ErrorType[] error = { CreateErrorType(OTA_ERR.System_error, OTA_EWT.Processing_exception, ex.Message) };
             errors.Error = error;
 
             return errors;
         }
 
-        public static ErrorType CreateErrorType(OTA_EWT errType, OTA_ERR errCode, string errMsg)
+        private static ErrorType CreateErrorType(OTA_ERR errCode, OTA_EWT errType, string errMsg)
         {
             ErrorType error = new ErrorType();
             error.Type = errType.ToString();

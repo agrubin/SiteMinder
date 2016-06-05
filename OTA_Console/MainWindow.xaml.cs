@@ -93,8 +93,8 @@ namespace OTA_Console
                         // Send a reservation confirmation.
                         //
 
-                        //ErrorType errorType = API.CreateErrorType(OTA_EWT.Biz_rule, OTA_ERR.Invalid_rate_code, "Invalid rate entered.");
-                        //NotifReportRQResponse confirmResponse = await API.OTA_NotifReportRQ(username, password, errorType, resStatus, dateTimeStamp, msgID, resIDPMS);
+                        ReservationError resError = new ReservationError(OTA_ERR.Invalid_rate_code, OTA_EWT.Biz_rule, "Invalid rate entered.");
+                        NotifReportRQResponse confirmResponse = await API.OTA_NotifReportRQ(username, password, resError, resStatus, dateTimeStamp, msgID, resIDPMS);
                     }
                 }
             }
