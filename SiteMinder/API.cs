@@ -36,7 +36,7 @@ namespace pmsXchange
     //                                  For PmsXchange this type will also be returned if the xml message does not meet the restrictions (e.g data types) specified by the xml schema.
     // 12	    Processing exception    Indicates that during processing of the request that a not further defined exception occurred.
 
-    public enum EWT
+    public enum OTA_EWT
     {
         Unknown = 1,
         Biz_rule = 3,
@@ -57,7 +57,7 @@ namespace pmsXchange
     //  450     Unable to process	 
     //  783     Room or rate not found                          Room and rate combination does not exist.
 
-    public enum ERR
+    public enum OTA_ERR
     {
         Invalid_rate_code = 249,
         Hotel_not_active = 375,
@@ -69,12 +69,58 @@ namespace pmsXchange
         Room_or_rate_not_found = 783
     }
 
+    public enum OTA_ID_Type
+    {
+        Customer = 1,
+	    CRO,
+	    Corporation_representative,
+	    Company,
+	    Travel_agency,
+	    Airline,
+	    Wholesaler,
+	    Car_rental,
+	    Group,
+	    Hotel,
+	    Tour_operator,
+	    Cruise_line,
+	    Internet_broker,
+	    Reservation,
+	    Cancellation,
+	    Reference,
+	    Meeting_planning_agency,
+	    Other,
+	    Insurance_agency,
+	    Insurance_agent,
+	    Profile,
+	    ERSP,
+	    Provisional_reservation,
+	    Travel_Agent_PNR,
+	    Associated_reservation,
+	    Associated_itinerary_reservation,
+	    Associated_shared_reservation,
+	    Alliance,
+	    Booking_agent,
+	    Ticket,
+	    Divided_reservation,
+	    Merchant,
+	    Acquirer,
+	    Master_reference,
+	    Purged_master_reference,
+	    Parent_reference,
+	    Child_reference,
+	    Linked_reference,
+	    Contract,
+	    Confirmation_number,
+	    Fare_quote,
+	    Reissue_refund_quote
+    }
+
     public class ReservationError
     {
-        public ERR err { get; set; }
-        public EWT ewt { get; set; }
+        public OTA_ERR err { get; set; }
+        public OTA_EWT ewt { get; set; }
         public string errorText { get; set; }
-        public ReservationError(ERR _err, EWT _ewt, string _errorText)
+        public ReservationError(OTA_ERR _err, OTA_EWT _ewt, string _errorText)
         {
             err = _err;
             ewt = _ewt;
@@ -140,10 +186,9 @@ namespace pmsXchange
 
     public static class API
     {
-        private const string requestorIDType = "22";  // This value is provided by SiteMinder.
         private const string textType = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText";
 
-        static public async Task<NotifReportRQResponse> OTA_NotifReportRQ(string usernameAuthenticate, string passwordAuthenticate, string resStatus, DateTime dateTimeStamp, string msgID, string resIDPMS)
+        static public async Task<NotifReportRQResponse> OTA_NotifReportRQ(string usernameAuthenticate, string passwordAuthenticate, ErrorType errorType, string resStatus, DateTime dateTimeStamp, string msgID, string resIDPMS)
         {
             NotifReportRQResponse response = null;
 
@@ -156,8 +201,19 @@ namespace pmsXchange
                 body.EchoToken = Guid.NewGuid().ToString();  // Echo token must be unique.            
                 body.TimeStamp = DateTime.Now;
                 body.TimeStampSpecified = true;
+                if (errorType == null)
+                {
+                    body.Items = new object[] { new SuccessType() };
+                }
+                else
+                {
+                    ErrorsType errors = new ErrorsType();
+                    ErrorType[] error = { errorType };
+                    errors.Error = error;
 
-                body.Items = new object[] { new SuccessType() };
+                    body.Items = new object[] { errors };
+                }
+
                 body.NotifDetails = new OTA_NotifReportRQNotifDetails();
                 body.NotifDetails.HotelNotifReport = new OTA_NotifReportRQNotifDetailsHotelNotifReport();
                 OTA_NotifReportRQNotifDetailsHotelNotifReportHotelReservations hotelReservations = new OTA_NotifReportRQNotifDetailsHotelNotifReportHotelReservations();
@@ -179,13 +235,21 @@ namespace pmsXchange
                 }
                 hotelReservations.HotelReservation[0].UniqueID = new UniqueID_Type[1];
                 hotelReservations.HotelReservation[0].UniqueID[0] = new UniqueID_Type();
-                hotelReservations.HotelReservation[0].UniqueID[0].Type = "16";
+                hotelReservations.HotelReservation[0].UniqueID[0].Type = OTA_ID_Type.Reference.ToString();
                 hotelReservations.HotelReservation[0].UniqueID[0].ID = msgID;
-                hotelReservations.HotelReservation[0].ResGlobalInfo = new ResGlobalInfoType();
-                hotelReservations.HotelReservation[0].ResGlobalInfo.HotelReservationIDs = new HotelReservationIDsTypeHotelReservationID[1];
-                hotelReservations.HotelReservation[0].ResGlobalInfo.HotelReservationIDs[0] = new HotelReservationIDsTypeHotelReservationID();
-                hotelReservations.HotelReservation[0].ResGlobalInfo.HotelReservationIDs[0].ResID_Type = "14";
-                hotelReservations.HotelReservation[0].ResGlobalInfo.HotelReservationIDs[0].ResID_Value = resIDPMS;
+
+                //
+                // Only include the reservation ID info if there was no error processin this reservation.
+                //
+
+                if (errorType == null)
+                {
+                    hotelReservations.HotelReservation[0].ResGlobalInfo = new ResGlobalInfoType();
+                    hotelReservations.HotelReservation[0].ResGlobalInfo.HotelReservationIDs = new HotelReservationIDsTypeHotelReservationID[1];
+                    hotelReservations.HotelReservation[0].ResGlobalInfo.HotelReservationIDs[0] = new HotelReservationIDsTypeHotelReservationID();
+                    hotelReservations.HotelReservation[0].ResGlobalInfo.HotelReservationIDs[0].ResID_Type = OTA_ID_Type.Reservation.ToString();
+                    hotelReservations.HotelReservation[0].ResGlobalInfo.HotelReservationIDs[0].ResID_Value = resIDPMS;
+                }
 
                 body.NotifDetails.HotelNotifReport.Item = hotelReservations;
                 response = await service.NotifReportRQAsync(CreateSecurityHeader(usernameAuthenticate, passwordAuthenticate), body).ConfigureAwait(false);
@@ -213,7 +277,6 @@ namespace pmsXchange
                 body.TimeStamp = DateTime.Now;
                 body.TimeStampSpecified = true;
                 body.POS = CreatePOS(pmsID);
-
                 OTA_ReadRQReadRequests readRequests = new OTA_ReadRQReadRequests();
                 OTA_ReadRQReadRequestsHotelReadRequest hotelReadRequest = new OTA_ReadRQReadRequestsHotelReadRequest();
                 hotelReadRequest.HotelCode = hotelCode;
@@ -288,12 +351,20 @@ namespace pmsXchange
         private static ErrorsType ProcessingException(Exception ex)
         {
             ErrorsType errors = new ErrorsType();
-            ErrorType[] error = new ErrorType[1];
-            error[0] = new ErrorType();
-            error[0].Type = EWT.Processing_exception.ToString();
-            error[0].Value = ex.Message;
+            ErrorType[] error = { CreateErrorType(OTA_EWT.Processing_exception, OTA_ERR.System_error, ex.Message) };
             errors.Error = error;
+
             return errors;
+        }
+
+        public static ErrorType CreateErrorType(OTA_EWT errType, OTA_ERR errCode, string errMsg)
+        {
+            ErrorType error = new ErrorType();
+            error.Type = errType.ToString();
+            error.Code = errCode.ToString();
+            error.Value = errMsg;
+
+            return error;
         }
 
         static private SecurityHeaderType CreateSecurityHeader(string usernameAuthenticate, string passwordAuthenticate)
@@ -303,10 +374,15 @@ namespace pmsXchange
             return securityHeader;
         }
 
+        //
+        // In this case, create a POS with an ERSP (Electronic Reservation Service Provider) type and the PMS ID provided
+        // by SiteMinder.
+        //
+
         static private SourceType[] CreatePOS(string pmsID)
         {
             SourceTypeRequestorID strid = new SourceTypeRequestorID();
-            strid.Type = requestorIDType;
+            strid.Type = OTA_ID_Type.ERSP.ToString();
             strid.ID = pmsID;
 
             SourceType sourcetype = new SourceType();

@@ -63,14 +63,14 @@ namespace OTA_Console
 
             if (reservationsResponse.OTA_ResRetrieveRS.Items[0].GetType() == typeof(SuccessType))
             {
-                //
-                // Got the reservation list, so now process it....
-                //
-
-                OTA_ResRetrieveRSReservationsList reservationList = (OTA_ResRetrieveRSReservationsList)reservationsResponse.OTA_ResRetrieveRS?.Items[1];
-                
-                if(reservationList != null)
+                if(reservationsResponse.OTA_ResRetrieveRS.Items.Length > 1)
                 {
+                    OTA_ResRetrieveRSReservationsList reservationList = (OTA_ResRetrieveRSReservationsList)reservationsResponse.OTA_ResRetrieveRS.Items[1];
+
+                    //
+                    // Got the reservation list, so now process it....
+                    //
+
                     foreach (HotelReservationType hotelReservation in reservationList.Items)
                     {
                         //
@@ -93,14 +93,10 @@ namespace OTA_Console
                         // Send a reservation confirmation.
                         //
 
-                        NotifReportRQResponse confirmResponse = await API.OTA_NotifReportRQ(username, password, resStatus, dateTimeStamp, msgID, resIDPMS);
+                        //ErrorType errorType = API.CreateErrorType(OTA_EWT.Biz_rule, OTA_ERR.Invalid_rate_code, "Invalid rate entered.");
+                        //NotifReportRQResponse confirmResponse = await API.OTA_NotifReportRQ(username, password, errorType, resStatus, dateTimeStamp, msgID, resIDPMS);
                     }
                 }
-    
-
-
-
-
             }
             else
             {
