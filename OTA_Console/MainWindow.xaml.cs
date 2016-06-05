@@ -95,6 +95,23 @@ namespace OTA_Console
 
                         ReservationError resError = new ReservationError(OTA_ERR.Invalid_rate_code, OTA_EWT.Biz_rule, "Invalid rate entered.");
                         NotifReportRQResponse confirmResponse = await API.OTA_NotifReportRQ(username, password, resError, resStatus, dateTimeStamp, msgID, resIDPMS);
+
+                        //
+                        // Make sure that no errors were generated during confirmation!
+                        //
+
+                        if(confirmResponse.OTA_NotifReportRS.Items[0].GetType() == typeof(SuccessType))
+                        {
+                            //
+                            // Confirmation was processed correctly.
+                            //
+                        }
+                        else
+                        {
+                            //
+                            // Confirmation error.
+                            //
+                        }
                     }
                 }
             }
