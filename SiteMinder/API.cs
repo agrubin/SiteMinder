@@ -290,7 +290,7 @@ namespace pmsXchange
 
                 if (resStatus != ResStatus.All)
                 {
-                    selectionCriteria.ResStatus = Enum.GetName(typeof(ResStatus), resStatus);
+                    selectionCriteria.ResStatus = resStatus.ToString();
                 }
 
                 hotelReadRequest.SelectionCriteria = selectionCriteria;
