@@ -23,7 +23,7 @@
                 </Style>
             </ListBox.ItemContainerStyle>
         </ListBox>
-        <TextBlock x:Name="textBlock_Response" HorizontalAlignment="Left" Margin="108.6,7,0,0" TextWrapping="Wrap" Text="Ping Response" VerticalAlignment="Top" Grid.Column="1" Height="16" Width="84"/>
+        <TextBlock x:Name="textBlock_Response" HorizontalAlignment="Left" Margin="108.6,11,0,0" TextWrapping="Wrap" Text="Ping Response" VerticalAlignment="Top" Grid.Column="1" Height="16" Width="84"/>
         <TextBlock x:Name="textBlock_Errors" HorizontalAlignment="Left" Margin="2.6,272,0,0" TextWrapping="Wrap" Text="OTA Responses" VerticalAlignment="Top" Height="16" Grid.Column="1" Width="122"/>
         <Button x:Name="button_Read" Content="OTA__ReadRQ" HorizontalAlignment="Left" Margin="22,68,0,0" VerticalAlignment="Top" Width="101" Click="button_Read_Click" Height="23" Grid.ColumnSpan="2"/>
         <Border Height="24" VerticalAlignment="Bottom" Margin="110.6,0,0,427" Grid.Column="1" HorizontalAlignment="Left" Width="256" BorderBrush="Black" BorderThickness="1">
@@ -35,7 +35,12 @@
             </StackPanel>
 
         </Border>
-        <Button x:Name="button_NotifReport" Content="OTA__NotifReportRQ" HorizontalAlignment="Left" Margin="22,110,0,0" VerticalAlignment="Top" Width="125" Click="button_NotifReport_Click" Height="23" Grid.ColumnSpan="2" IsEnabled="False"/>
+        <Button x:Name="button_NotifReport" Content="OTA__NotifReportRQ" HorizontalAlignment="Left" Margin="22,120,0,0" VerticalAlignment="Top" Width="125" Click="button_NotifReport_Click" Height="23" Grid.ColumnSpan="2" IsEnabled="False"/>
+        <ComboBox x:Name="comboBox_OTA_EWT" Grid.Column="1" HorizontalAlignment="Left" Margin="182.6,120,0,0" VerticalAlignment="Top" Width="275" Loaded="comboBox_OTA_EWT_Loaded" IsEnabled="{Binding IsEnabled, ElementName=button_NotifReport}"/>
+        <TextBlock x:Name="textBlock_Response_Copy" HorizontalAlignment="Left" Margin="182.6,104,0,0" TextWrapping="Wrap" Text="OTA_EWT Error Type" VerticalAlignment="Top" Grid.Column="1" Height="16" Width="135"/>
+        <ComboBox x:Name="comboBox_OTA_ERR" Grid.Column="1" HorizontalAlignment="Left" Margin="182.6,164,0,0" VerticalAlignment="Top" Width="275" Loaded="comboBox_OTA_ERR_Loaded" IsEnabled="{Binding IsEnabled, ElementName=button_NotifReport}"/>
+        <TextBlock x:Name="textBlock_Response_Copy1" HorizontalAlignment="Left" Margin="182.6,148,0,0" TextWrapping="Wrap" Text="OTA_ERR Error Code" VerticalAlignment="Top" Grid.Column="1" Height="16" Width="135"/>
+        <CheckBox x:Name="checkBox_Conf_Errror" Content="Send Confirmation Error" HorizontalAlignment="Left" Margin="22,148,0,0" VerticalAlignment="Top" Width="153" Grid.ColumnSpan="2" IsEnabled="{Binding IsEnabled, ElementName=button_NotifReport}"/>
 
     </Grid>
 </Window>

@@ -27,7 +27,7 @@ namespace OTA_Console
     public partial class MainWindow : Window
     {
         const string username = "SPIOrangeTest";
-        const string password = "ymdqMsjBNutXLQMdVvtJZVXe9";
+        const string password = "ymdqMsjBNutXLQMdVvtJZVXe";
         const string pmsID = "SPIORANGE";
         const string hotelCode = "SPI516";
 
@@ -152,14 +152,23 @@ namespace OTA_Console
                 // Send a reservation confirmation.
                 //
 
-                //ReservationError resError = new ReservationError(OTA_ERR.Invalid_rate_code, OTA_EWT.Biz_rule, "Invalid rate entered.");
-                NotifReportRQResponse confirmResponse = await API.OTA_NotifReportRQ(username, password, null, resStatusText, dateTimeStamp, msgID, resIDPMS);
+                NotifReportRQResponse confirmResponse = null;
+
+                if (checkBox_Conf_Errror.IsChecked == false)
+                {
+                    confirmResponse = await API.OTA_NotifReportRQ(username, password, null, resStatusText, dateTimeStamp, msgID, resIDPMS);
+                }
+                else
+                {
+                    ReservationError resError = new ReservationError((OTA_EWT)comboBox_OTA_EWT.SelectedValue, (OTA_ERR)comboBox_OTA_ERR.SelectedValue, null);
+                    confirmResponse = await API.OTA_NotifReportRQ(username, password, null, resStatusText, dateTimeStamp, msgID, resIDPMS);
+                }
 
                 //
                 // Make sure that no errors were generated during confirmation!
                 //
 
-                if(confirmResponse.OTA_NotifReportRS.Items[0].GetType() == typeof(SuccessType))
+                if (confirmResponse.OTA_NotifReportRS.Items[0].GetType() == typeof(SuccessType))
                 {
                     //
                     // Confirmation was processed correctly.
@@ -182,6 +191,18 @@ namespace OTA_Console
                     }
                 }
             }
+        }
+
+        private void comboBox_OTA_EWT_Loaded(object sender, RoutedEventArgs e)
+        {
+            comboBox_OTA_EWT.ItemsSource = Enum.GetValues(typeof(OTA_EWT));
+            comboBox_OTA_EWT.SelectedIndex = 0;
+        }
+
+        private void comboBox_OTA_ERR_Loaded(object sender, RoutedEventArgs e)
+        {
+            comboBox_OTA_ERR.ItemsSource = Enum.GetValues(typeof(OTA_ERR));
+            comboBox_OTA_ERR.SelectedIndex = 0;
         }
     }
 }
