@@ -120,7 +120,7 @@ namespace pmsXchange
         public OTA_ERR err { get; set; }
         public OTA_EWT ewt { get; set; }
         public string errorText { get; set; }
-        public ReservationError(OTA_ERR errOTA, OTA_EWT ewtOTA, string errText)
+        public ReservationError(OTA_EWT ewtOTA, OTA_ERR errOTA, string errText)
         {
             err = errOTA;
             ewt = ewtOTA;
@@ -129,8 +129,8 @@ namespace pmsXchange
             // Since this text is going into an XML node, invalid chars must be escaped with XML entities.
             //
 
-            string xml = errText;
-            errorText = xml.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
+            string xmlText = errText ?? errOTA.ToString().Replace("_", " ");
+            errorText = xmlText.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
         }
     }
 

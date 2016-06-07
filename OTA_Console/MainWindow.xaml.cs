@@ -27,7 +27,7 @@ namespace OTA_Console
     public partial class MainWindow : Window
     {
         const string username = "SPIOrangeTest";
-        const string password = "ymdqMsjBNutXLQMdVvtJZVXe";
+        const string password = "ymdqMsjBNutXLQMdVvtJZVXe9";
         const string pmsID = "SPIORANGE";
         const string hotelCode = "SPI516";
 
@@ -51,12 +51,9 @@ namespace OTA_Console
                 foreach (var error in errors.Error)
                 {
                     textBlock_Ping.Text = "Error";
-                    WriteResponseLine(string.Format("OTA_PingRS error - Timestamp: {2}  Type: {0}  Value: {1}", error.Type, error.Value, timestamp));
+                    WriteResponseLine(string.Format("OTA_PingRS error - Timestamp: {2},  Type: {0},  Value: {1}", error.Type, error.Value, timestamp));
                 }
             }
-
-
-            //ReservationError resErr = new ReservationError(ERR.Hotel_not_active, EWT.Processing_exception, "hello");        
         }
 
         private void WriteResponseLine(string responseLine)
@@ -71,8 +68,12 @@ namespace OTA_Console
                 scrollInterface.Scroll(scrollHorizontal, scrollVertical);
         }
 
+        OTA_ResRetrieveRSReservationsList reservationList;
+
         private async void button_Read_Click(object sender, RoutedEventArgs e)
         {
+            button_NotifReport.IsEnabled = false;
+
             ResStatus resStatus = ResStatus.All;
             if (radioButton_Modify.IsChecked == true) resStatus = ResStatus.Modify;
             if (radioButton_Cancel.IsChecked == true) resStatus = ResStatus.Cancel;
@@ -86,8 +87,8 @@ namespace OTA_Console
 
                 if (reservationsResponse.OTA_ResRetrieveRS.Items.Length > 1)
                 {
-                    WriteResponseLine(string.Format("# of reservations: {0} ", reservationsResponse.OTA_ResRetrieveRS.Items.Length));
-                    OTA_ResRetrieveRSReservationsList reservationList = (OTA_ResRetrieveRSReservationsList)reservationsResponse.OTA_ResRetrieveRS.Items[1];
+                    reservationList = (OTA_ResRetrieveRSReservationsList)reservationsResponse.OTA_ResRetrieveRS.Items[1];
+                    WriteResponseLine(string.Format("# of reservations: {0} ", reservationList.Items.Length));
 
                     //
                     // Got the reservation list, so now process it....
@@ -109,31 +110,8 @@ namespace OTA_Console
                         string resStatusText = hotelReservation.ResStatus;
                         DateTime dateTimeStamp = resStatusText == "Book" ? hotelReservation.CreateDateTime : hotelReservation.LastModifyDateTime;
 
-                        WriteResponseLine(string.Format("Reservation - resID: {0} msgID: {1} Status: {4} TimeStamp: {3}", resIDPMS, msgID, dateTimeStamp.ToString(), resStatusText));
-
-                        //
-                        // Send a reservation confirmation.
-                        //
-
-                        //ReservationError resError = new ReservationError(OTA_ERR.Invalid_rate_code, OTA_EWT.Biz_rule, "Invalid rate entered.");
-                        //NotifReportRQResponse confirmResponse = await API.OTA_NotifReportRQ(username, password, resError, resStatusText, dateTimeStamp, msgID, resIDPMS);
-
-                        //
-                        // Make sure that no errors were generated during confirmation!
-                        //
-
-                        //if(confirmResponse.OTA_NotifReportRS.Items[0].GetType() == typeof(SuccessType))
-                        //{
-                        //
-                        // Confirmation was processed correctly.
-                        //
-                        //}
-                        //else
-                        //{
-                        //
-                        // Confirmation error.
-                        //
-                        //}
+                        WriteResponseLine(string.Format("Reservation - resID: {0}, msgID: {1}, Status: {2}, TimeStamp: {3}", resIDPMS, msgID, resStatusText, dateTimeStamp.ToString()));
+                        button_NotifReport.IsEnabled = true;
                     }
                 }
                 else
@@ -147,7 +125,61 @@ namespace OTA_Console
                 ErrorsType errors = (ErrorsType)reservationsResponse.OTA_ResRetrieveRS.Items[0];
                 foreach (var error in errors.Error)
                 {
-                    WriteResponseLine(string.Format("OTA_ResRetrieveRS error - Timestamp: {2}  Type: {0}  Value: {1}", error.Type, error.Value, timestamp));
+                    WriteResponseLine(string.Format("OTA_ResRetrieveRS error - Timestamp: {2},  Type: {0},  Value: {1}", error.Type, error.Value, timestamp));
+                }
+            }
+        }
+
+        private async void button_NotifReport_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (HotelReservationType hotelReservation in reservationList.Items)
+            {
+                //
+                // Get the pmsXchange reservation reference.
+                //
+
+                UniqueID_Type[] uniqueIDs = hotelReservation.UniqueID;
+                string resType = uniqueIDs[0].Type;
+                string resIDPMS = uniqueIDs[0].ID;
+
+                string msgType = uniqueIDs[1].Type;
+                string msgID = uniqueIDs[1].ID;
+
+                string resStatusText = hotelReservation.ResStatus;
+                DateTime dateTimeStamp = resStatusText == "Book" ? hotelReservation.CreateDateTime : hotelReservation.LastModifyDateTime;
+
+                //
+                // Send a reservation confirmation.
+                //
+
+                //ReservationError resError = new ReservationError(OTA_ERR.Invalid_rate_code, OTA_EWT.Biz_rule, "Invalid rate entered.");
+                NotifReportRQResponse confirmResponse = await API.OTA_NotifReportRQ(username, password, null, resStatusText, dateTimeStamp, msgID, resIDPMS);
+
+                //
+                // Make sure that no errors were generated during confirmation!
+                //
+
+                if(confirmResponse.OTA_NotifReportRS.Items[0].GetType() == typeof(SuccessType))
+                {
+                    //
+                    // Confirmation was processed correctly.
+                    //
+
+                    WriteResponseLine(string.Format("Reservation resID: {0} confirmed successfully.", resIDPMS));
+                    button_NotifReport.IsEnabled = false;
+                }
+                else
+                {
+                    //
+                    // Confirmation error.
+                    //
+
+                    string timestamp = confirmResponse.OTA_NotifReportRS.TimeStamp.ToString();
+                    ErrorsType errors = (ErrorsType)confirmResponse.OTA_NotifReportRS.Items[0];
+                    foreach (var error in errors.Error)
+                    {
+                        WriteResponseLine(string.Format("OTA_NotifReportRS error - Timestamp: {2},  Type: {0},  Value: {1}", error.Type, error.Value, timestamp));
+                    }
                 }
             }
         }
