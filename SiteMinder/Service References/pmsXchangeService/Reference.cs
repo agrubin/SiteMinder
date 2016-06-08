@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SiteMinder.pmsXchangeService {
+namespace pmsXchange.pmsXchangeService {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -41,10 +41,10 @@ namespace SiteMinder.pmsXchangeService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(VehicleRetrieveResRQCoreType))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TicketingInfoType))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(StreetNmbrType))]
-        SiteMinder.pmsXchangeService.ReadRQResponse ReadRQ(SiteMinder.pmsXchangeService.ReadRQRequest request);
+        pmsXchange.pmsXchangeService.ReadRQResponse ReadRQ(pmsXchange.pmsXchangeService.ReadRQRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://www.siteminder.com.au/pmsxchange/ReadRQ", ReplyAction="*")]
-        System.Threading.Tasks.Task<SiteMinder.pmsXchangeService.ReadRQResponse> ReadRQAsync(SiteMinder.pmsXchangeService.ReadRQRequest request);
+        System.Threading.Tasks.Task<pmsXchange.pmsXchangeService.ReadRQResponse> ReadRQAsync(pmsXchange.pmsXchangeService.ReadRQRequest request);
         
         // CODEGEN: Generating message contract since the operation NotifReportRQ is neither RPC nor document wrapped.
         [System.ServiceModel.OperationContractAttribute(Action="http://www.siteminder.com.au/pmsxchange/NotifReportRQ", ReplyAction="*")]
@@ -72,10 +72,10 @@ namespace SiteMinder.pmsXchangeService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(VehicleRetrieveResRQCoreType))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TicketingInfoType))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(StreetNmbrType))]
-        SiteMinder.pmsXchangeService.NotifReportRQResponse NotifReportRQ(SiteMinder.pmsXchangeService.NotifReportRQRequest request);
+        pmsXchange.pmsXchangeService.NotifReportRQResponse NotifReportRQ(pmsXchange.pmsXchangeService.NotifReportRQRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://www.siteminder.com.au/pmsxchange/NotifReportRQ", ReplyAction="*")]
-        System.Threading.Tasks.Task<SiteMinder.pmsXchangeService.NotifReportRQResponse> NotifReportRQAsync(SiteMinder.pmsXchangeService.NotifReportRQRequest request);
+        System.Threading.Tasks.Task<pmsXchange.pmsXchangeService.NotifReportRQResponse> NotifReportRQAsync(pmsXchange.pmsXchangeService.NotifReportRQRequest request);
         
         // CODEGEN: Generating message contract since the operation HotelAvailNotifRQ is neither RPC nor document wrapped.
         [System.ServiceModel.OperationContractAttribute(Action="http://www.siteminder.com.au/pmsxchange/HotelAvailNotifRQ", ReplyAction="*")]
@@ -103,10 +103,10 @@ namespace SiteMinder.pmsXchangeService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(VehicleRetrieveResRQCoreType))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TicketingInfoType))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(StreetNmbrType))]
-        SiteMinder.pmsXchangeService.HotelAvailNotifRQResponse HotelAvailNotifRQ(SiteMinder.pmsXchangeService.HotelAvailNotifRQRequest request);
+        pmsXchange.pmsXchangeService.HotelAvailNotifRQResponse HotelAvailNotifRQ(pmsXchange.pmsXchangeService.HotelAvailNotifRQRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://www.siteminder.com.au/pmsxchange/HotelAvailNotifRQ", ReplyAction="*")]
-        System.Threading.Tasks.Task<SiteMinder.pmsXchangeService.HotelAvailNotifRQResponse> HotelAvailNotifRQAsync(SiteMinder.pmsXchangeService.HotelAvailNotifRQRequest request);
+        System.Threading.Tasks.Task<pmsXchange.pmsXchangeService.HotelAvailNotifRQResponse> HotelAvailNotifRQAsync(pmsXchange.pmsXchangeService.HotelAvailNotifRQRequest request);
         
         // CODEGEN: Generating message contract since the operation HotelRateAmountNotifRQ is neither RPC nor document wrapped.
         [System.ServiceModel.OperationContractAttribute(Action="http://www.siteminder.com.au/pmsxchange/HotelRateAmountNotifRQ", ReplyAction="*")]
@@ -134,10 +134,10 @@ namespace SiteMinder.pmsXchangeService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(VehicleRetrieveResRQCoreType))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TicketingInfoType))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(StreetNmbrType))]
-        SiteMinder.pmsXchangeService.HotelRateAmountNotifRQResponse HotelRateAmountNotifRQ(SiteMinder.pmsXchangeService.HotelRateAmountNotifRQRequest request);
+        pmsXchange.pmsXchangeService.HotelRateAmountNotifRQResponse HotelRateAmountNotifRQ(pmsXchange.pmsXchangeService.HotelRateAmountNotifRQRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://www.siteminder.com.au/pmsxchange/HotelRateAmountNotifRQ", ReplyAction="*")]
-        System.Threading.Tasks.Task<SiteMinder.pmsXchangeService.HotelRateAmountNotifRQResponse> HotelRateAmountNotifRQAsync(SiteMinder.pmsXchangeService.HotelRateAmountNotifRQRequest request);
+        System.Threading.Tasks.Task<pmsXchange.pmsXchangeService.HotelRateAmountNotifRQResponse> HotelRateAmountNotifRQAsync(pmsXchange.pmsXchangeService.HotelRateAmountNotifRQRequest request);
         
         // CODEGEN: Generating message contract since the operation PingRQ is neither RPC nor document wrapped.
         [System.ServiceModel.OperationContractAttribute(Action="http://www.siteminder.com.au/pmsxchange/PingRQ", ReplyAction="*")]
@@ -165,10 +165,10 @@ namespace SiteMinder.pmsXchangeService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(VehicleRetrieveResRQCoreType))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TicketingInfoType))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(StreetNmbrType))]
-        SiteMinder.pmsXchangeService.PingRQResponse PingRQ(SiteMinder.pmsXchangeService.PingRQRequest request);
+        pmsXchange.pmsXchangeService.PingRQResponse PingRQ(pmsXchange.pmsXchangeService.PingRQRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://www.siteminder.com.au/pmsxchange/PingRQ", ReplyAction="*")]
-        System.Threading.Tasks.Task<SiteMinder.pmsXchangeService.PingRQResponse> PingRQAsync(SiteMinder.pmsXchangeService.PingRQRequest request);
+        System.Threading.Tasks.Task<pmsXchange.pmsXchangeService.PingRQResponse> PingRQAsync(pmsXchange.pmsXchangeService.PingRQRequest request);
     }
     
     /// <remarks/>
@@ -70129,15 +70129,15 @@ namespace SiteMinder.pmsXchangeService {
         
         [System.ServiceModel.MessageHeaderAttribute(Namespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" +
             "")]
-        public SiteMinder.pmsXchangeService.SecurityHeaderType Security;
+        public pmsXchange.pmsXchangeService.SecurityHeaderType Security;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://www.opentravel.org/OTA/2003/05", Order=0)]
-        public SiteMinder.pmsXchangeService.OTA_ReadRQ OTA_ReadRQ;
+        public pmsXchange.pmsXchangeService.OTA_ReadRQ OTA_ReadRQ;
         
         public ReadRQRequest() {
         }
         
-        public ReadRQRequest(SiteMinder.pmsXchangeService.SecurityHeaderType Security, SiteMinder.pmsXchangeService.OTA_ReadRQ OTA_ReadRQ) {
+        public ReadRQRequest(pmsXchange.pmsXchangeService.SecurityHeaderType Security, pmsXchange.pmsXchangeService.OTA_ReadRQ OTA_ReadRQ) {
             this.Security = Security;
             this.OTA_ReadRQ = OTA_ReadRQ;
         }
@@ -70150,12 +70150,12 @@ namespace SiteMinder.pmsXchangeService {
     public partial class ReadRQResponse {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://www.opentravel.org/OTA/2003/05", Order=0)]
-        public SiteMinder.pmsXchangeService.OTA_ResRetrieveRS OTA_ResRetrieveRS;
+        public pmsXchange.pmsXchangeService.OTA_ResRetrieveRS OTA_ResRetrieveRS;
         
         public ReadRQResponse() {
         }
         
-        public ReadRQResponse(SiteMinder.pmsXchangeService.OTA_ResRetrieveRS OTA_ResRetrieveRS) {
+        public ReadRQResponse(pmsXchange.pmsXchangeService.OTA_ResRetrieveRS OTA_ResRetrieveRS) {
             this.OTA_ResRetrieveRS = OTA_ResRetrieveRS;
         }
     }
@@ -70982,15 +70982,15 @@ namespace SiteMinder.pmsXchangeService {
         
         [System.ServiceModel.MessageHeaderAttribute(Namespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" +
             "")]
-        public SiteMinder.pmsXchangeService.SecurityHeaderType Security;
+        public pmsXchange.pmsXchangeService.SecurityHeaderType Security;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://www.opentravel.org/OTA/2003/05", Order=0)]
-        public SiteMinder.pmsXchangeService.OTA_NotifReportRQ OTA_NotifReportRQ;
+        public pmsXchange.pmsXchangeService.OTA_NotifReportRQ OTA_NotifReportRQ;
         
         public NotifReportRQRequest() {
         }
         
-        public NotifReportRQRequest(SiteMinder.pmsXchangeService.SecurityHeaderType Security, SiteMinder.pmsXchangeService.OTA_NotifReportRQ OTA_NotifReportRQ) {
+        public NotifReportRQRequest(pmsXchange.pmsXchangeService.SecurityHeaderType Security, pmsXchange.pmsXchangeService.OTA_NotifReportRQ OTA_NotifReportRQ) {
             this.Security = Security;
             this.OTA_NotifReportRQ = OTA_NotifReportRQ;
         }
@@ -71003,12 +71003,12 @@ namespace SiteMinder.pmsXchangeService {
     public partial class NotifReportRQResponse {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://www.opentravel.org/OTA/2003/05", Order=0)]
-        public SiteMinder.pmsXchangeService.MessageAcknowledgementType OTA_NotifReportRS;
+        public pmsXchange.pmsXchangeService.MessageAcknowledgementType OTA_NotifReportRS;
         
         public NotifReportRQResponse() {
         }
         
-        public NotifReportRQResponse(SiteMinder.pmsXchangeService.MessageAcknowledgementType OTA_NotifReportRS) {
+        public NotifReportRQResponse(pmsXchange.pmsXchangeService.MessageAcknowledgementType OTA_NotifReportRS) {
             this.OTA_NotifReportRS = OTA_NotifReportRS;
         }
     }
@@ -71464,15 +71464,15 @@ namespace SiteMinder.pmsXchangeService {
         
         [System.ServiceModel.MessageHeaderAttribute(Namespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" +
             "")]
-        public SiteMinder.pmsXchangeService.SecurityHeaderType Security;
+        public pmsXchange.pmsXchangeService.SecurityHeaderType Security;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://www.opentravel.org/OTA/2003/05", Order=0)]
-        public SiteMinder.pmsXchangeService.OTA_HotelAvailNotifRQ OTA_HotelAvailNotifRQ;
+        public pmsXchange.pmsXchangeService.OTA_HotelAvailNotifRQ OTA_HotelAvailNotifRQ;
         
         public HotelAvailNotifRQRequest() {
         }
         
-        public HotelAvailNotifRQRequest(SiteMinder.pmsXchangeService.SecurityHeaderType Security, SiteMinder.pmsXchangeService.OTA_HotelAvailNotifRQ OTA_HotelAvailNotifRQ) {
+        public HotelAvailNotifRQRequest(pmsXchange.pmsXchangeService.SecurityHeaderType Security, pmsXchange.pmsXchangeService.OTA_HotelAvailNotifRQ OTA_HotelAvailNotifRQ) {
             this.Security = Security;
             this.OTA_HotelAvailNotifRQ = OTA_HotelAvailNotifRQ;
         }
@@ -71485,12 +71485,12 @@ namespace SiteMinder.pmsXchangeService {
     public partial class HotelAvailNotifRQResponse {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://www.opentravel.org/OTA/2003/05", Order=0)]
-        public SiteMinder.pmsXchangeService.MessageAcknowledgementType OTA_HotelAvailNotifRS;
+        public pmsXchange.pmsXchangeService.MessageAcknowledgementType OTA_HotelAvailNotifRS;
         
         public HotelAvailNotifRQResponse() {
         }
         
-        public HotelAvailNotifRQResponse(SiteMinder.pmsXchangeService.MessageAcknowledgementType OTA_HotelAvailNotifRS) {
+        public HotelAvailNotifRQResponse(pmsXchange.pmsXchangeService.MessageAcknowledgementType OTA_HotelAvailNotifRS) {
             this.OTA_HotelAvailNotifRS = OTA_HotelAvailNotifRS;
         }
     }
@@ -71932,15 +71932,15 @@ namespace SiteMinder.pmsXchangeService {
         
         [System.ServiceModel.MessageHeaderAttribute(Namespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" +
             "")]
-        public SiteMinder.pmsXchangeService.SecurityHeaderType Security;
+        public pmsXchange.pmsXchangeService.SecurityHeaderType Security;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://www.opentravel.org/OTA/2003/05", Order=0)]
-        public SiteMinder.pmsXchangeService.OTA_HotelRateAmountNotifRQ OTA_HotelRateAmountNotifRQ;
+        public pmsXchange.pmsXchangeService.OTA_HotelRateAmountNotifRQ OTA_HotelRateAmountNotifRQ;
         
         public HotelRateAmountNotifRQRequest() {
         }
         
-        public HotelRateAmountNotifRQRequest(SiteMinder.pmsXchangeService.SecurityHeaderType Security, SiteMinder.pmsXchangeService.OTA_HotelRateAmountNotifRQ OTA_HotelRateAmountNotifRQ) {
+        public HotelRateAmountNotifRQRequest(pmsXchange.pmsXchangeService.SecurityHeaderType Security, pmsXchange.pmsXchangeService.OTA_HotelRateAmountNotifRQ OTA_HotelRateAmountNotifRQ) {
             this.Security = Security;
             this.OTA_HotelRateAmountNotifRQ = OTA_HotelRateAmountNotifRQ;
         }
@@ -71953,12 +71953,12 @@ namespace SiteMinder.pmsXchangeService {
     public partial class HotelRateAmountNotifRQResponse {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://www.opentravel.org/OTA/2003/05", Order=0)]
-        public SiteMinder.pmsXchangeService.MessageAcknowledgementType OTA_HotelRateAmountNotifRS;
+        public pmsXchange.pmsXchangeService.MessageAcknowledgementType OTA_HotelRateAmountNotifRS;
         
         public HotelRateAmountNotifRQResponse() {
         }
         
-        public HotelRateAmountNotifRQResponse(SiteMinder.pmsXchangeService.MessageAcknowledgementType OTA_HotelRateAmountNotifRS) {
+        public HotelRateAmountNotifRQResponse(pmsXchange.pmsXchangeService.MessageAcknowledgementType OTA_HotelRateAmountNotifRS) {
             this.OTA_HotelRateAmountNotifRS = OTA_HotelRateAmountNotifRS;
         }
     }
@@ -72458,15 +72458,15 @@ namespace SiteMinder.pmsXchangeService {
         
         [System.ServiceModel.MessageHeaderAttribute(Namespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" +
             "")]
-        public SiteMinder.pmsXchangeService.SecurityHeaderType Security;
+        public pmsXchange.pmsXchangeService.SecurityHeaderType Security;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://www.opentravel.org/OTA/2003/05", Order=0)]
-        public SiteMinder.pmsXchangeService.OTA_PingRQ OTA_PingRQ;
+        public pmsXchange.pmsXchangeService.OTA_PingRQ OTA_PingRQ;
         
         public PingRQRequest() {
         }
         
-        public PingRQRequest(SiteMinder.pmsXchangeService.SecurityHeaderType Security, SiteMinder.pmsXchangeService.OTA_PingRQ OTA_PingRQ) {
+        public PingRQRequest(pmsXchange.pmsXchangeService.SecurityHeaderType Security, pmsXchange.pmsXchangeService.OTA_PingRQ OTA_PingRQ) {
             this.Security = Security;
             this.OTA_PingRQ = OTA_PingRQ;
         }
@@ -72479,23 +72479,23 @@ namespace SiteMinder.pmsXchangeService {
     public partial class PingRQResponse {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://www.opentravel.org/OTA/2003/05", Order=0)]
-        public SiteMinder.pmsXchangeService.OTA_PingRS OTA_PingRS;
+        public pmsXchange.pmsXchangeService.OTA_PingRS OTA_PingRS;
         
         public PingRQResponse() {
         }
         
-        public PingRQResponse(SiteMinder.pmsXchangeService.OTA_PingRS OTA_PingRS) {
+        public PingRQResponse(pmsXchange.pmsXchangeService.OTA_PingRS OTA_PingRS) {
             this.OTA_PingRS = OTA_PingRS;
         }
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface PmsXchangeServiceChannel : SiteMinder.pmsXchangeService.PmsXchangeService, System.ServiceModel.IClientChannel {
+    public interface PmsXchangeServiceChannel : pmsXchange.pmsXchangeService.PmsXchangeService, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class PmsXchangeServiceClient : System.ServiceModel.ClientBase<SiteMinder.pmsXchangeService.PmsXchangeService>, SiteMinder.pmsXchangeService.PmsXchangeService {
+    public partial class PmsXchangeServiceClient : System.ServiceModel.ClientBase<pmsXchange.pmsXchangeService.PmsXchangeService>, pmsXchange.pmsXchangeService.PmsXchangeService {
         
         public PmsXchangeServiceClient() {
         }
@@ -72517,128 +72517,128 @@ namespace SiteMinder.pmsXchangeService {
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        SiteMinder.pmsXchangeService.ReadRQResponse SiteMinder.pmsXchangeService.PmsXchangeService.ReadRQ(SiteMinder.pmsXchangeService.ReadRQRequest request) {
+        pmsXchange.pmsXchangeService.ReadRQResponse pmsXchange.pmsXchangeService.PmsXchangeService.ReadRQ(pmsXchange.pmsXchangeService.ReadRQRequest request) {
             return base.Channel.ReadRQ(request);
         }
         
-        public SiteMinder.pmsXchangeService.OTA_ResRetrieveRS ReadRQ(SiteMinder.pmsXchangeService.SecurityHeaderType Security, SiteMinder.pmsXchangeService.OTA_ReadRQ OTA_ReadRQ) {
-            SiteMinder.pmsXchangeService.ReadRQRequest inValue = new SiteMinder.pmsXchangeService.ReadRQRequest();
+        public pmsXchange.pmsXchangeService.OTA_ResRetrieveRS ReadRQ(pmsXchange.pmsXchangeService.SecurityHeaderType Security, pmsXchange.pmsXchangeService.OTA_ReadRQ OTA_ReadRQ) {
+            pmsXchange.pmsXchangeService.ReadRQRequest inValue = new pmsXchange.pmsXchangeService.ReadRQRequest();
             inValue.Security = Security;
             inValue.OTA_ReadRQ = OTA_ReadRQ;
-            SiteMinder.pmsXchangeService.ReadRQResponse retVal = ((SiteMinder.pmsXchangeService.PmsXchangeService)(this)).ReadRQ(inValue);
+            pmsXchange.pmsXchangeService.ReadRQResponse retVal = ((pmsXchange.pmsXchangeService.PmsXchangeService)(this)).ReadRQ(inValue);
             return retVal.OTA_ResRetrieveRS;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<SiteMinder.pmsXchangeService.ReadRQResponse> SiteMinder.pmsXchangeService.PmsXchangeService.ReadRQAsync(SiteMinder.pmsXchangeService.ReadRQRequest request) {
+        System.Threading.Tasks.Task<pmsXchange.pmsXchangeService.ReadRQResponse> pmsXchange.pmsXchangeService.PmsXchangeService.ReadRQAsync(pmsXchange.pmsXchangeService.ReadRQRequest request) {
             return base.Channel.ReadRQAsync(request);
         }
         
-        public System.Threading.Tasks.Task<SiteMinder.pmsXchangeService.ReadRQResponse> ReadRQAsync(SiteMinder.pmsXchangeService.SecurityHeaderType Security, SiteMinder.pmsXchangeService.OTA_ReadRQ OTA_ReadRQ) {
-            SiteMinder.pmsXchangeService.ReadRQRequest inValue = new SiteMinder.pmsXchangeService.ReadRQRequest();
+        public System.Threading.Tasks.Task<pmsXchange.pmsXchangeService.ReadRQResponse> ReadRQAsync(pmsXchange.pmsXchangeService.SecurityHeaderType Security, pmsXchange.pmsXchangeService.OTA_ReadRQ OTA_ReadRQ) {
+            pmsXchange.pmsXchangeService.ReadRQRequest inValue = new pmsXchange.pmsXchangeService.ReadRQRequest();
             inValue.Security = Security;
             inValue.OTA_ReadRQ = OTA_ReadRQ;
-            return ((SiteMinder.pmsXchangeService.PmsXchangeService)(this)).ReadRQAsync(inValue);
+            return ((pmsXchange.pmsXchangeService.PmsXchangeService)(this)).ReadRQAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        SiteMinder.pmsXchangeService.NotifReportRQResponse SiteMinder.pmsXchangeService.PmsXchangeService.NotifReportRQ(SiteMinder.pmsXchangeService.NotifReportRQRequest request) {
+        pmsXchange.pmsXchangeService.NotifReportRQResponse pmsXchange.pmsXchangeService.PmsXchangeService.NotifReportRQ(pmsXchange.pmsXchangeService.NotifReportRQRequest request) {
             return base.Channel.NotifReportRQ(request);
         }
         
-        public SiteMinder.pmsXchangeService.MessageAcknowledgementType NotifReportRQ(SiteMinder.pmsXchangeService.SecurityHeaderType Security, SiteMinder.pmsXchangeService.OTA_NotifReportRQ OTA_NotifReportRQ) {
-            SiteMinder.pmsXchangeService.NotifReportRQRequest inValue = new SiteMinder.pmsXchangeService.NotifReportRQRequest();
+        public pmsXchange.pmsXchangeService.MessageAcknowledgementType NotifReportRQ(pmsXchange.pmsXchangeService.SecurityHeaderType Security, pmsXchange.pmsXchangeService.OTA_NotifReportRQ OTA_NotifReportRQ) {
+            pmsXchange.pmsXchangeService.NotifReportRQRequest inValue = new pmsXchange.pmsXchangeService.NotifReportRQRequest();
             inValue.Security = Security;
             inValue.OTA_NotifReportRQ = OTA_NotifReportRQ;
-            SiteMinder.pmsXchangeService.NotifReportRQResponse retVal = ((SiteMinder.pmsXchangeService.PmsXchangeService)(this)).NotifReportRQ(inValue);
+            pmsXchange.pmsXchangeService.NotifReportRQResponse retVal = ((pmsXchange.pmsXchangeService.PmsXchangeService)(this)).NotifReportRQ(inValue);
             return retVal.OTA_NotifReportRS;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<SiteMinder.pmsXchangeService.NotifReportRQResponse> SiteMinder.pmsXchangeService.PmsXchangeService.NotifReportRQAsync(SiteMinder.pmsXchangeService.NotifReportRQRequest request) {
+        System.Threading.Tasks.Task<pmsXchange.pmsXchangeService.NotifReportRQResponse> pmsXchange.pmsXchangeService.PmsXchangeService.NotifReportRQAsync(pmsXchange.pmsXchangeService.NotifReportRQRequest request) {
             return base.Channel.NotifReportRQAsync(request);
         }
         
-        public System.Threading.Tasks.Task<SiteMinder.pmsXchangeService.NotifReportRQResponse> NotifReportRQAsync(SiteMinder.pmsXchangeService.SecurityHeaderType Security, SiteMinder.pmsXchangeService.OTA_NotifReportRQ OTA_NotifReportRQ) {
-            SiteMinder.pmsXchangeService.NotifReportRQRequest inValue = new SiteMinder.pmsXchangeService.NotifReportRQRequest();
+        public System.Threading.Tasks.Task<pmsXchange.pmsXchangeService.NotifReportRQResponse> NotifReportRQAsync(pmsXchange.pmsXchangeService.SecurityHeaderType Security, pmsXchange.pmsXchangeService.OTA_NotifReportRQ OTA_NotifReportRQ) {
+            pmsXchange.pmsXchangeService.NotifReportRQRequest inValue = new pmsXchange.pmsXchangeService.NotifReportRQRequest();
             inValue.Security = Security;
             inValue.OTA_NotifReportRQ = OTA_NotifReportRQ;
-            return ((SiteMinder.pmsXchangeService.PmsXchangeService)(this)).NotifReportRQAsync(inValue);
+            return ((pmsXchange.pmsXchangeService.PmsXchangeService)(this)).NotifReportRQAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        SiteMinder.pmsXchangeService.HotelAvailNotifRQResponse SiteMinder.pmsXchangeService.PmsXchangeService.HotelAvailNotifRQ(SiteMinder.pmsXchangeService.HotelAvailNotifRQRequest request) {
+        pmsXchange.pmsXchangeService.HotelAvailNotifRQResponse pmsXchange.pmsXchangeService.PmsXchangeService.HotelAvailNotifRQ(pmsXchange.pmsXchangeService.HotelAvailNotifRQRequest request) {
             return base.Channel.HotelAvailNotifRQ(request);
         }
         
-        public SiteMinder.pmsXchangeService.MessageAcknowledgementType HotelAvailNotifRQ(SiteMinder.pmsXchangeService.SecurityHeaderType Security, SiteMinder.pmsXchangeService.OTA_HotelAvailNotifRQ OTA_HotelAvailNotifRQ) {
-            SiteMinder.pmsXchangeService.HotelAvailNotifRQRequest inValue = new SiteMinder.pmsXchangeService.HotelAvailNotifRQRequest();
+        public pmsXchange.pmsXchangeService.MessageAcknowledgementType HotelAvailNotifRQ(pmsXchange.pmsXchangeService.SecurityHeaderType Security, pmsXchange.pmsXchangeService.OTA_HotelAvailNotifRQ OTA_HotelAvailNotifRQ) {
+            pmsXchange.pmsXchangeService.HotelAvailNotifRQRequest inValue = new pmsXchange.pmsXchangeService.HotelAvailNotifRQRequest();
             inValue.Security = Security;
             inValue.OTA_HotelAvailNotifRQ = OTA_HotelAvailNotifRQ;
-            SiteMinder.pmsXchangeService.HotelAvailNotifRQResponse retVal = ((SiteMinder.pmsXchangeService.PmsXchangeService)(this)).HotelAvailNotifRQ(inValue);
+            pmsXchange.pmsXchangeService.HotelAvailNotifRQResponse retVal = ((pmsXchange.pmsXchangeService.PmsXchangeService)(this)).HotelAvailNotifRQ(inValue);
             return retVal.OTA_HotelAvailNotifRS;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<SiteMinder.pmsXchangeService.HotelAvailNotifRQResponse> SiteMinder.pmsXchangeService.PmsXchangeService.HotelAvailNotifRQAsync(SiteMinder.pmsXchangeService.HotelAvailNotifRQRequest request) {
+        System.Threading.Tasks.Task<pmsXchange.pmsXchangeService.HotelAvailNotifRQResponse> pmsXchange.pmsXchangeService.PmsXchangeService.HotelAvailNotifRQAsync(pmsXchange.pmsXchangeService.HotelAvailNotifRQRequest request) {
             return base.Channel.HotelAvailNotifRQAsync(request);
         }
         
-        public System.Threading.Tasks.Task<SiteMinder.pmsXchangeService.HotelAvailNotifRQResponse> HotelAvailNotifRQAsync(SiteMinder.pmsXchangeService.SecurityHeaderType Security, SiteMinder.pmsXchangeService.OTA_HotelAvailNotifRQ OTA_HotelAvailNotifRQ) {
-            SiteMinder.pmsXchangeService.HotelAvailNotifRQRequest inValue = new SiteMinder.pmsXchangeService.HotelAvailNotifRQRequest();
+        public System.Threading.Tasks.Task<pmsXchange.pmsXchangeService.HotelAvailNotifRQResponse> HotelAvailNotifRQAsync(pmsXchange.pmsXchangeService.SecurityHeaderType Security, pmsXchange.pmsXchangeService.OTA_HotelAvailNotifRQ OTA_HotelAvailNotifRQ) {
+            pmsXchange.pmsXchangeService.HotelAvailNotifRQRequest inValue = new pmsXchange.pmsXchangeService.HotelAvailNotifRQRequest();
             inValue.Security = Security;
             inValue.OTA_HotelAvailNotifRQ = OTA_HotelAvailNotifRQ;
-            return ((SiteMinder.pmsXchangeService.PmsXchangeService)(this)).HotelAvailNotifRQAsync(inValue);
+            return ((pmsXchange.pmsXchangeService.PmsXchangeService)(this)).HotelAvailNotifRQAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        SiteMinder.pmsXchangeService.HotelRateAmountNotifRQResponse SiteMinder.pmsXchangeService.PmsXchangeService.HotelRateAmountNotifRQ(SiteMinder.pmsXchangeService.HotelRateAmountNotifRQRequest request) {
+        pmsXchange.pmsXchangeService.HotelRateAmountNotifRQResponse pmsXchange.pmsXchangeService.PmsXchangeService.HotelRateAmountNotifRQ(pmsXchange.pmsXchangeService.HotelRateAmountNotifRQRequest request) {
             return base.Channel.HotelRateAmountNotifRQ(request);
         }
         
-        public SiteMinder.pmsXchangeService.MessageAcknowledgementType HotelRateAmountNotifRQ(SiteMinder.pmsXchangeService.SecurityHeaderType Security, SiteMinder.pmsXchangeService.OTA_HotelRateAmountNotifRQ OTA_HotelRateAmountNotifRQ) {
-            SiteMinder.pmsXchangeService.HotelRateAmountNotifRQRequest inValue = new SiteMinder.pmsXchangeService.HotelRateAmountNotifRQRequest();
+        public pmsXchange.pmsXchangeService.MessageAcknowledgementType HotelRateAmountNotifRQ(pmsXchange.pmsXchangeService.SecurityHeaderType Security, pmsXchange.pmsXchangeService.OTA_HotelRateAmountNotifRQ OTA_HotelRateAmountNotifRQ) {
+            pmsXchange.pmsXchangeService.HotelRateAmountNotifRQRequest inValue = new pmsXchange.pmsXchangeService.HotelRateAmountNotifRQRequest();
             inValue.Security = Security;
             inValue.OTA_HotelRateAmountNotifRQ = OTA_HotelRateAmountNotifRQ;
-            SiteMinder.pmsXchangeService.HotelRateAmountNotifRQResponse retVal = ((SiteMinder.pmsXchangeService.PmsXchangeService)(this)).HotelRateAmountNotifRQ(inValue);
+            pmsXchange.pmsXchangeService.HotelRateAmountNotifRQResponse retVal = ((pmsXchange.pmsXchangeService.PmsXchangeService)(this)).HotelRateAmountNotifRQ(inValue);
             return retVal.OTA_HotelRateAmountNotifRS;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<SiteMinder.pmsXchangeService.HotelRateAmountNotifRQResponse> SiteMinder.pmsXchangeService.PmsXchangeService.HotelRateAmountNotifRQAsync(SiteMinder.pmsXchangeService.HotelRateAmountNotifRQRequest request) {
+        System.Threading.Tasks.Task<pmsXchange.pmsXchangeService.HotelRateAmountNotifRQResponse> pmsXchange.pmsXchangeService.PmsXchangeService.HotelRateAmountNotifRQAsync(pmsXchange.pmsXchangeService.HotelRateAmountNotifRQRequest request) {
             return base.Channel.HotelRateAmountNotifRQAsync(request);
         }
         
-        public System.Threading.Tasks.Task<SiteMinder.pmsXchangeService.HotelRateAmountNotifRQResponse> HotelRateAmountNotifRQAsync(SiteMinder.pmsXchangeService.SecurityHeaderType Security, SiteMinder.pmsXchangeService.OTA_HotelRateAmountNotifRQ OTA_HotelRateAmountNotifRQ) {
-            SiteMinder.pmsXchangeService.HotelRateAmountNotifRQRequest inValue = new SiteMinder.pmsXchangeService.HotelRateAmountNotifRQRequest();
+        public System.Threading.Tasks.Task<pmsXchange.pmsXchangeService.HotelRateAmountNotifRQResponse> HotelRateAmountNotifRQAsync(pmsXchange.pmsXchangeService.SecurityHeaderType Security, pmsXchange.pmsXchangeService.OTA_HotelRateAmountNotifRQ OTA_HotelRateAmountNotifRQ) {
+            pmsXchange.pmsXchangeService.HotelRateAmountNotifRQRequest inValue = new pmsXchange.pmsXchangeService.HotelRateAmountNotifRQRequest();
             inValue.Security = Security;
             inValue.OTA_HotelRateAmountNotifRQ = OTA_HotelRateAmountNotifRQ;
-            return ((SiteMinder.pmsXchangeService.PmsXchangeService)(this)).HotelRateAmountNotifRQAsync(inValue);
+            return ((pmsXchange.pmsXchangeService.PmsXchangeService)(this)).HotelRateAmountNotifRQAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        SiteMinder.pmsXchangeService.PingRQResponse SiteMinder.pmsXchangeService.PmsXchangeService.PingRQ(SiteMinder.pmsXchangeService.PingRQRequest request) {
+        pmsXchange.pmsXchangeService.PingRQResponse pmsXchange.pmsXchangeService.PmsXchangeService.PingRQ(pmsXchange.pmsXchangeService.PingRQRequest request) {
             return base.Channel.PingRQ(request);
         }
         
-        public SiteMinder.pmsXchangeService.OTA_PingRS PingRQ(SiteMinder.pmsXchangeService.SecurityHeaderType Security, SiteMinder.pmsXchangeService.OTA_PingRQ OTA_PingRQ) {
-            SiteMinder.pmsXchangeService.PingRQRequest inValue = new SiteMinder.pmsXchangeService.PingRQRequest();
+        public pmsXchange.pmsXchangeService.OTA_PingRS PingRQ(pmsXchange.pmsXchangeService.SecurityHeaderType Security, pmsXchange.pmsXchangeService.OTA_PingRQ OTA_PingRQ) {
+            pmsXchange.pmsXchangeService.PingRQRequest inValue = new pmsXchange.pmsXchangeService.PingRQRequest();
             inValue.Security = Security;
             inValue.OTA_PingRQ = OTA_PingRQ;
-            SiteMinder.pmsXchangeService.PingRQResponse retVal = ((SiteMinder.pmsXchangeService.PmsXchangeService)(this)).PingRQ(inValue);
+            pmsXchange.pmsXchangeService.PingRQResponse retVal = ((pmsXchange.pmsXchangeService.PmsXchangeService)(this)).PingRQ(inValue);
             return retVal.OTA_PingRS;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<SiteMinder.pmsXchangeService.PingRQResponse> SiteMinder.pmsXchangeService.PmsXchangeService.PingRQAsync(SiteMinder.pmsXchangeService.PingRQRequest request) {
+        System.Threading.Tasks.Task<pmsXchange.pmsXchangeService.PingRQResponse> pmsXchange.pmsXchangeService.PmsXchangeService.PingRQAsync(pmsXchange.pmsXchangeService.PingRQRequest request) {
             return base.Channel.PingRQAsync(request);
         }
         
-        public System.Threading.Tasks.Task<SiteMinder.pmsXchangeService.PingRQResponse> PingRQAsync(SiteMinder.pmsXchangeService.SecurityHeaderType Security, SiteMinder.pmsXchangeService.OTA_PingRQ OTA_PingRQ) {
-            SiteMinder.pmsXchangeService.PingRQRequest inValue = new SiteMinder.pmsXchangeService.PingRQRequest();
+        public System.Threading.Tasks.Task<pmsXchange.pmsXchangeService.PingRQResponse> PingRQAsync(pmsXchange.pmsXchangeService.SecurityHeaderType Security, pmsXchange.pmsXchangeService.OTA_PingRQ OTA_PingRQ) {
+            pmsXchange.pmsXchangeService.PingRQRequest inValue = new pmsXchange.pmsXchangeService.PingRQRequest();
             inValue.Security = Security;
             inValue.OTA_PingRQ = OTA_PingRQ;
-            return ((SiteMinder.pmsXchangeService.PmsXchangeService)(this)).PingRQAsync(inValue);
+            return ((pmsXchange.pmsXchangeService.PmsXchangeService)(this)).PingRQAsync(inValue);
         }
     }
 }

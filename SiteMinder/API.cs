@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.ServiceModel.Configuration;
-using System.ServiceModel;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Xml;
 
-using SiteMinder.pmsXchangeService;
+using pmsXchange.pmsXchangeService;
+
+
 
 namespace pmsXchange
 {
@@ -18,256 +16,204 @@ namespace pmsXchange
     // https://cmtpi.siteminder.com/pmsxchangev2/services/SPIORANGE/pmsxchange_flat.wsdl 
     //
 
-    public enum ResStatus
-    {
-        All,        // All reservations.
-        Book,       // New reservations.
-        Modify,     // Modified reservations.
-        Cancel      // Cancelled reservations.
-    }
-
-    // EWT      Error Type              Description
-    // ---      ----------              -----------  
-    //    
-    // 1	    Unknown                 Indicates an unknown error.
-    // 3	    Biz rule                Indicates that the XML message has passed a low-level validation check, but that the business rules for the request message were not met.
-    // 4	    Authentication          Indicates the message lacks adequate security credentials.
-    // 6	    Authorization           Indicates the message lacks adequate security credentials.
-    // 10	    Required field missing  Indicates that an element or attribute that is required in by the schema (or required by agreement between trading partners) is missing from the message.
-    //                                  For PmsXchange this type will also be returned if the xml message does not meet the restrictions (e.g data types) specified by the xml schema.
-    // 12	    Processing exception    Indicates that during processing of the request that a not further defined exception occurred.
-
-    public enum OTA_EWT
-    {
-        Unknown = 1,
-        Biz_rule = 3,
-        Authentication = 4,
-        Authorization = 6,
-        Required_field_missing = 10,
-        Processing_exception = 12
-    }
-
-    //  ERR     Error Code                                      Description
-    //  ---     ----------                                      -----------
-    //  249     Invalid rate code                               Rate does not exist.
-    //  375     Hotel not active                                Hotel is not enabled to receive inventory updates.
-    //  385     Invalid confirmation or cancellation number     Confirmation or cancellation number does not exist.
-    //  392     Invalid hotel code                              Hotel does not exist.
-    //  402     Invalid room type                               Room does not exist.
-    //  448     System error
-    //  450     Unable to process	 
-    //  783     Room or rate not found                          Room and rate combination does not exist.
-
-    public enum OTA_ERR
-    {
-        Invalid_rate_code = 249,
-        Hotel_not_active = 375,
-        Invalid_confirmation_or_cancellation_number = 385,
-        Invalid_hotel_code = 392,
-        Invalid_room_type = 402,
-        System_error = 448,
-        Unable_to_process = 450,
-        Room_or_rate_not_found = 783
-    }
-
-    public enum OTA_ID_Type
-    {
-        Customer = 1,
-	    CRO,
-	    Corporation_representative,
-	    Company,
-	    Travel_agency,
-	    Airline,
-	    Wholesaler,
-	    Car_rental,
-	    Group,
-	    Hotel,
-	    Tour_operator,
-	    Cruise_line,
-	    Internet_broker,
-	    Reservation,
-	    Cancellation,
-	    Reference,
-	    Meeting_planning_agency,
-	    Other,
-	    Insurance_agency,
-	    Insurance_agent,
-	    Profile,
-	    ERSP,
-	    Provisional_reservation,
-	    Travel_Agent_PNR,
-	    Associated_reservation,
-	    Associated_itinerary_reservation,
-	    Associated_shared_reservation,
-	    Alliance,
-	    Booking_agent,
-	    Ticket,
-	    Divided_reservation,
-	    Merchant,
-	    Acquirer,
-	    Master_reference,
-	    Purged_master_reference,
-	    Parent_reference,
-	    Child_reference,
-	    Linked_reference,
-	    Contract,
-	    Confirmation_number,
-	    Fare_quote,
-	    Reissue_refund_quote
-    }
-
-    public class ReservationError
-    {
-        public OTA_ERR err { get; set; }
-        public OTA_EWT ewt { get; set; }
-        public string errorText { get; set; }
-        public ReservationError(OTA_EWT ewtOTA, OTA_ERR errOTA, string errText)
-        {
-            err = errOTA;
-            ewt = ewtOTA;
-
-            //
-            // Since this text is going into an XML node, invalid chars must be escaped with XML entities.
-            //
-
-            string xmlText = errText ?? errOTA.ToString().Replace("_", " ");
-            errorText = xmlText.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
-        }
-    }
-
-  
-    public sealed class AvailStatusMessages
-    {
-        public sealed class AvailStatusMessage
-        {        
-            public sealed class LengthsOfStay
-            {
-                public sealed class LengthOfStay
-                {
-                    public string MinMaxMessageType { get; set; }
-                    public string Time { get; set; }
-                }
-
-                public LengthOfStay[] lengthOfStay { get; private set; }
-
-                LengthsOfStay(bool setMinLOS, bool setMaxLOS, int minTime, int maxTime)
-                {
-                    if(!(setMinLOS || setMaxLOS))
-                    {
-                        throw new Exception("LengthsOfStay: invalid arguments.");
-                    }
-
-                    if(setMinLOS && setMaxLOS)
-                    {
-                        if(minTime > maxTime)
-                        {
-                            throw new Exception("LengthsOfStay: minTime can't be greater than maxTime.");
-                        }
-                    }
-
-
-                    lengthOfStay = new LengthOfStay[Convert.ToInt32(setMinLOS) + Convert.ToInt32(setMaxLOS)];
-
-                    if(setMinLOS)
-                    {
-                        if(minTime < 1 || minTime > 999)
-                        {
-                            lengthOfStay = null;
-                            throw new Exception("LengthsOfStay: minTime must be between 1 and 999.");
-                        }
-
-                        lengthOfStay[0].MinMaxMessageType = "SetMinLOS";
-                        lengthOfStay[0].Time = minTime.ToString();
-                    }
-
-                    if (setMaxLOS)
-                    {
-                        if (maxTime < 1 || maxTime > 999)
-                        {
-                            lengthOfStay = null;
-                            throw new Exception("LengthsOfStay: maxTime must be between 1 and 999.");
-                        }
-
-                        lengthOfStay[Convert.ToInt32(setMinLOS) + Convert.ToInt32(setMaxLOS)].MinMaxMessageType = "SetMaxLOS";
-                        lengthOfStay[Convert.ToInt32(setMinLOS) + Convert.ToInt32(setMaxLOS)].Time = maxTime.ToString();
-                    }
-
-                }
-            }
-
-            public string BookingLimit { get; private set; }
-            LengthsOfStay lengthsOfStay;
-
-            AvailStatusMessage()
-            {
-
-            }
-            AvailStatusMessage(int bookingLimit)
-            {
-                BookingLimit = bookingLimit.ToString();
-            }
-        }
-        public string HotelCode { get; private set; }
-        List<AvailStatusMessage> availStatusMessage;
-
-        AvailStatusMessages(string hotelCode)
-        {
-            HotelCode = hotelCode;
-        }
-    }
-
-    //
-    // The service connection implemeted as a singleton so it is only instantiated and initalized one time
-    // upon the first access, then the same connection is returned on each subsequent access.  Use only for
-    // synchronous calls.
-    //
-    public sealed class ServiceConnection
-    {
-        public static ServiceConnection Instance { get { return lazyConnection.Value; }  }
-        private const string endpointURI = "https://cmtpi.siteminder.com/pmsxchangev2/services/SPIORANGE";  // Provided by SiteMinder.
-        private static readonly Lazy<ServiceConnection> lazyConnection = new Lazy<ServiceConnection>(() => new ServiceConnection());
-        public PmsXchangeServiceClient service { get; private set; }
-
-        private ServiceConnection()
-        {
-            InitializeService();
-        }
-
-        public void InitializeService()
-        {
-            BasicHttpBinding binding = new BasicHttpBinding();
-            binding.Security.Mode = BasicHttpSecurityMode.Transport;
-
-            EndpointAddress address = new EndpointAddress(endpointURI);
-            service = new PmsXchangeServiceClient(binding, address);
-        }
-    }
-
-    //
-    // The service connection implemeted as a class, creates a new connectione very time it's instantiated. Use only for asynchronous calls.
-    //
-    public sealed class AsyncServiceConnection
-    {
-        private const string endpointURI = "https://cmtpi.siteminder.com/pmsxchangev2/services/SPIORANGE";  // Provided by SiteMinder.
-        public PmsXchangeServiceClient service { get; private set; }
-
-        public AsyncServiceConnection()
-        {
-            InitializeService();
-        }
-
-        public void InitializeService()
-        {
-            BasicHttpBinding binding = new BasicHttpBinding();
-            binding.Security.Mode = BasicHttpSecurityMode.Transport;
-
-            EndpointAddress address = new EndpointAddress(endpointURI);
-            service = new PmsXchangeServiceClient(binding, address);
-        }
-    }
-
     public static class API
     {
+        public enum ResStatus
+        {
+            All,        // All reservations.
+            Book,       // New reservations.
+            Modify,     // Modified reservations.
+            Cancel      // Cancelled reservations.
+        }
+
+        // EWT      Error Type              Description
+        // ---      ----------              -----------  
+        //    
+        // 1	    Unknown                 Indicates an unknown error.
+        // 3	    Biz rule                Indicates that the XML message has passed a low-level validation check, but that the business rules for the request message were not met.
+        // 4	    Authentication          Indicates the message lacks adequate security credentials.
+        // 6	    Authorization           Indicates the message lacks adequate security credentials.
+        // 10	    Required field missing  Indicates that an element or attribute that is required in by the schema (or required by agreement between trading partners) is missing from the message.
+        //                                  For PmsXchange this type will also be returned if the xml message does not meet the restrictions (e.g data types) specified by the xml schema.
+        // 12	    Processing exception    Indicates that during processing of the request that a not further defined exception occurred.
+
+        public enum OTA_EWT
+        {
+            Unknown = 1,
+            Biz_rule = 3,
+            Authentication = 4,
+            Authorization = 6,
+            Required_field_missing = 10,
+            Processing_exception = 12
+        }
+
+        //  ERR     Error Code                                      Description
+        //  ---     ----------                                      -----------
+        //  249     Invalid rate code                               Rate does not exist.
+        //  375     Hotel not active                                Hotel is not enabled to receive inventory updates.
+        //  385     Invalid confirmation or cancellation number     Confirmation or cancellation number does not exist.
+        //  392     Invalid hotel code                              Hotel does not exist.
+        //  402     Invalid room type                               Room does not exist.
+        //  448     System error
+        //  450     Unable to process	 
+        //  783     Room or rate not found                          Room and rate combination does not exist.
+
+        public enum OTA_ERR
+        {
+            Invalid_rate_code = 249,
+            Hotel_not_active = 375,
+            Invalid_confirmation_or_cancellation_number = 385,
+            Invalid_hotel_code = 392,
+            Invalid_room_type = 402,
+            System_error = 448,
+            Unable_to_process = 450,
+            Room_or_rate_not_found = 783
+        }
+
+        public enum OTA_ID_Type
+        {
+            Customer = 1,
+	        CRO,
+	        Corporation_representative,
+	        Company,
+	        Travel_agency,
+	        Airline,
+	        Wholesaler,
+	        Car_rental,
+	        Group,
+	        Hotel,
+	        Tour_operator,
+	        Cruise_line,
+	        Internet_broker,
+	        Reservation,
+	        Cancellation,
+	        Reference,
+	        Meeting_planning_agency,
+	        Other,
+	        Insurance_agency,
+	        Insurance_agent,
+	        Profile,
+	        ERSP,
+	        Provisional_reservation,
+	        Travel_Agent_PNR,
+	        Associated_reservation,
+	        Associated_itinerary_reservation,
+	        Associated_shared_reservation,
+	        Alliance,
+	        Booking_agent,
+	        Ticket,
+	        Divided_reservation,
+	        Merchant,
+	        Acquirer,
+	        Master_reference,
+	        Purged_master_reference,
+	        Parent_reference,
+	        Child_reference,
+	        Linked_reference,
+	        Contract,
+	        Confirmation_number,
+	        Fare_quote,
+	        Reissue_refund_quote
+        }
+ 
+        public sealed class ReservationError
+        {
+            public OTA_ERR err { get; set; }
+            public OTA_EWT ewt { get; set; }
+            public string errorText { get; set; }
+            public ReservationError(OTA_EWT ewtOTA, OTA_ERR errOTA, string errText)
+            {
+                err = errOTA;
+                ewt = ewtOTA;
+
+                //
+                // Since this text is going into an XML node, invalid chars must be escaped with XML entities.
+                //
+
+                string xmlText = errText ?? errOTA.ToString().Replace("_", " ");
+                errorText = xmlText.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
+            }
+        }
+        public sealed class AvailStatusMessages
+        {
+            public sealed class AvailStatusMessage
+            {
+                public sealed class LengthsOfStay
+                {
+                    public sealed class LengthOfStay
+                    {
+                        public string MinMaxMessageType { get; set; }
+                        public string Time { get; set; }
+                    }
+
+                    public LengthOfStay[] lengthOfStay { get; private set; }
+
+                    LengthsOfStay(bool setMinLOS, bool setMaxLOS, int minTime, int maxTime)
+                    {
+                        if (!(setMinLOS || setMaxLOS))
+                        {
+                            throw new Exception("LengthsOfStay: invalid arguments.");
+                        }
+
+                        if (setMinLOS && setMaxLOS)
+                        {
+                            if (minTime > maxTime)
+                            {
+                                throw new Exception("LengthsOfStay: minTime can't be greater than maxTime.");
+                            }
+                        }
+
+
+                        lengthOfStay = new LengthOfStay[Convert.ToInt32(setMinLOS) + Convert.ToInt32(setMaxLOS)];
+
+                        if (setMinLOS)
+                        {
+                            if (minTime < 1 || minTime > 999)
+                            {
+                                lengthOfStay = null;
+                                throw new Exception("LengthsOfStay: minTime must be between 1 and 999.");
+                            }
+
+                            lengthOfStay[0].MinMaxMessageType = "SetMinLOS";
+                            lengthOfStay[0].Time = minTime.ToString();
+                        }
+
+                        if (setMaxLOS)
+                        {
+                            if (maxTime < 1 || maxTime > 999)
+                            {
+                                lengthOfStay = null;
+                                throw new Exception("LengthsOfStay: maxTime must be between 1 and 999.");
+                            }
+
+                            lengthOfStay[Convert.ToInt32(setMinLOS) + Convert.ToInt32(setMaxLOS)].MinMaxMessageType = "SetMaxLOS";
+                            lengthOfStay[Convert.ToInt32(setMinLOS) + Convert.ToInt32(setMaxLOS)].Time = maxTime.ToString();
+                        }
+
+                    }
+                }
+
+                public string BookingLimit { get; private set; }
+                LengthsOfStay lengthsOfStay;
+
+                AvailStatusMessage()
+                {
+
+                }
+                AvailStatusMessage(int bookingLimit)
+                {
+                    BookingLimit = bookingLimit.ToString();
+                }
+            }
+            public string HotelCode { get; private set; }
+            List<AvailStatusMessage> availStatusMessage;
+
+            AvailStatusMessages(string hotelCode)
+            {
+                HotelCode = hotelCode;
+            }
+        }
+
         private const string textType = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText";
 
         static public async Task<NotifReportRQResponse> OTA_NotifReportRQ(string usernameAuthenticate, string passwordAuthenticate, ReservationError resError, string resStatus, DateTime dateTimeStamp, string msgID, string resIDPMS)

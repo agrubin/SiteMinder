@@ -17,7 +17,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using pmsXchange;
-using SiteMinder.pmsXchangeService;
+using pmsXchange.pmsXchangeService;
 
 namespace OTA_Console
 {
@@ -38,6 +38,7 @@ namespace OTA_Console
 
         private async void button_Ping_Click(object sender, RoutedEventArgs e)
         {
+            
             textBlock_Ping.Text = "Sending...";
             PingRQResponse pingResponse = await API.OTA_PingRQ(username, password);
             if (pingResponse.OTA_PingRS.Items[0].GetType() == typeof(SuccessType))
@@ -74,10 +75,10 @@ namespace OTA_Console
         {
             button_NotifReport.IsEnabled = false;
 
-            ResStatus resStatus = ResStatus.All;
-            if (radioButton_Modify.IsChecked == true) resStatus = ResStatus.Modify;
-            if (radioButton_Cancel.IsChecked == true) resStatus = ResStatus.Cancel;
-            if (radioButton_Book.IsChecked == true) resStatus = ResStatus.Book;
+            API.ResStatus resStatus = API.ResStatus.All;
+            if (radioButton_Modify.IsChecked == true) resStatus = API.ResStatus.Modify;
+            if (radioButton_Cancel.IsChecked == true) resStatus = API.ResStatus.Cancel;
+            if (radioButton_Book.IsChecked == true) resStatus = API.ResStatus.Book;
 
             ReadRQResponse reservationsResponse = await API.OTA_ReadRQ(pmsID, username, password, hotelCode, resStatus);
 
@@ -160,7 +161,7 @@ namespace OTA_Console
                 }
                 else
                 {
-                    ReservationError resError = new ReservationError((OTA_EWT)comboBox_OTA_EWT.SelectedValue, (OTA_ERR)comboBox_OTA_ERR.SelectedValue, null);
+                    API.ReservationError resError = new API.ReservationError((API.OTA_EWT)comboBox_OTA_EWT.SelectedValue, (API.OTA_ERR)comboBox_OTA_ERR.SelectedValue, null);
                     confirmResponse = await API.OTA_NotifReportRQ(username, password, null, resStatusText, dateTimeStamp, msgID, resIDPMS);
                 }
 
@@ -195,13 +196,13 @@ namespace OTA_Console
 
         private void comboBox_OTA_EWT_Loaded(object sender, RoutedEventArgs e)
         {
-            comboBox_OTA_EWT.ItemsSource = Enum.GetValues(typeof(OTA_EWT));
+            comboBox_OTA_EWT.ItemsSource = Enum.GetValues(typeof(API.OTA_EWT));
             comboBox_OTA_EWT.SelectedIndex = 0;
         }
 
         private void comboBox_OTA_ERR_Loaded(object sender, RoutedEventArgs e)
         {
-            comboBox_OTA_ERR.ItemsSource = Enum.GetValues(typeof(OTA_ERR));
+            comboBox_OTA_ERR.ItemsSource = Enum.GetValues(typeof(API.OTA_ERR));
             comboBox_OTA_ERR.SelectedIndex = 0;
         }
     }

@@ -7,7 +7,7 @@
     <ProjectGuid>{08ECE230-2290-41DA-9DEC-F2F534B886C5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SiteMinder</RootNamespace>
+    <RootNamespace>pmsXchange</RootNamespace>
     <AssemblyName>SiteMinder</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -43,18 +43,44 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API.cs" />
+    <Compile Include="AsyncServiceConnection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service References\pmsXchangeService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="ServiceConnection.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Service References\pmsXchangeService\pmsXchange.pmsXchangeService.HotelAvailNotifRQResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\pmsXchangeService\pmsXchange.pmsXchangeService.HotelRateAmountNotifRQResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\pmsXchangeService\pmsXchange.pmsXchangeService.MessageAcknowledgementType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\pmsXchangeService\pmsXchange.pmsXchangeService.NotifReportRQResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\pmsXchangeService\pmsXchange.pmsXchangeService.OTA_PingRS.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\pmsXchangeService\pmsXchange.pmsXchangeService.OTA_ResRetrieveRS.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\pmsXchangeService\pmsXchange.pmsXchangeService.PingRQResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\pmsXchangeService\pmsXchange.pmsXchangeService.ReadRQResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\pmsXchangeService\pmsxchange_flat.wsdl" />
   </ItemGroup>
   <ItemGroup>
