@@ -56,21 +56,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Service References\pmsXchangeService\pmsxchange_flat.wsdl" />
-    <None Include="Service References\pmsXchangeService\SiteMinder.pmsXchangeService.HotelAvailNotifRQResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\pmsXchangeService\SiteMinder.pmsXchangeService.HotelRateAmountNotifRQResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\pmsXchangeService\SiteMinder.pmsXchangeService.NotifReportRQResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\pmsXchangeService\SiteMinder.pmsXchangeService.PingRQResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\pmsXchangeService\SiteMinder.pmsXchangeService.ReadRQResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\pmsXchangeService\" />

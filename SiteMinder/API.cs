@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.ServiceModel.Configuration;
 using System.ServiceModel;
@@ -134,6 +135,87 @@ namespace pmsXchange
         }
     }
 
+  
+    public sealed class AvailStatusMessages
+    {
+        public sealed class AvailStatusMessage
+        {        
+            public sealed class LengthsOfStay
+            {
+                public sealed class LengthOfStay
+                {
+                    public string MinMaxMessageType { get; set; }
+                    public string Time { get; set; }
+                }
+
+                public LengthOfStay[] lengthOfStay { get; private set; }
+
+                LengthsOfStay(bool setMinLOS, bool setMaxLOS, int minTime, int maxTime)
+                {
+                    if(!(setMinLOS || setMaxLOS))
+                    {
+                        throw new Exception("LengthsOfStay: invalid arguments.");
+                    }
+
+                    if(setMinLOS && setMaxLOS)
+                    {
+                        if(minTime > maxTime)
+                        {
+                            throw new Exception("LengthsOfStay: minTime can't be greater than maxTime.");
+                        }
+                    }
+
+
+                    lengthOfStay = new LengthOfStay[Convert.ToInt32(setMinLOS) + Convert.ToInt32(setMaxLOS)];
+
+                    if(setMinLOS)
+                    {
+                        if(minTime < 1 || minTime > 999)
+                        {
+                            lengthOfStay = null;
+                            throw new Exception("LengthsOfStay: minTime must be between 1 and 999.");
+                        }
+
+                        lengthOfStay[0].MinMaxMessageType = "SetMinLOS";
+                        lengthOfStay[0].Time = minTime.ToString();
+                    }
+
+                    if (setMaxLOS)
+                    {
+                        if (maxTime < 1 || maxTime > 999)
+                        {
+                            lengthOfStay = null;
+                            throw new Exception("LengthsOfStay: maxTime must be between 1 and 999.");
+                        }
+
+                        lengthOfStay[Convert.ToInt32(setMinLOS) + Convert.ToInt32(setMaxLOS)].MinMaxMessageType = "SetMaxLOS";
+                        lengthOfStay[Convert.ToInt32(setMinLOS) + Convert.ToInt32(setMaxLOS)].Time = maxTime.ToString();
+                    }
+
+                }
+            }
+
+            public string BookingLimit { get; private set; }
+            LengthsOfStay lengthsOfStay;
+
+            AvailStatusMessage()
+            {
+
+            }
+            AvailStatusMessage(int bookingLimit)
+            {
+                BookingLimit = bookingLimit.ToString();
+            }
+        }
+        public string HotelCode { get; private set; }
+        List<AvailStatusMessage> availStatusMessage;
+
+        AvailStatusMessages(string hotelCode)
+        {
+            HotelCode = hotelCode;
+        }
+    }
+
     //
     // The service connection implemeted as a singleton so it is only instantiated and initalized one time
     // upon the first access, then the same connection is returned on each subsequent access.  Use only for
@@ -265,6 +347,32 @@ namespace pmsXchange
 
             return response;
         }
+
+        static public async Task<HotelAvailNotifRQResponse> OTA_HotelAvailNotifRQ(string pmsID, string usernameAuthenticate, string passwordAuthenticate)
+        {
+            HotelAvailNotifRQResponse response = null;
+
+            PmsXchangeServiceClient service = new AsyncServiceConnection().service;
+
+            try
+            {
+                OTA_HotelAvailNotifRQ body = new OTA_HotelAvailNotifRQ();
+                body.Version = 1.0M;
+                body.EchoToken = Guid.NewGuid().ToString();  // Echo token must be unique.            
+                body.TimeStamp = DateTime.Now;
+                body.TimeStampSpecified = true;
+                body.POS = CreatePOS(pmsID);
+            }
+            catch(Exception ex)
+            {
+                response = new HotelAvailNotifRQResponse();
+                response.OTA_HotelAvailNotifRS = new MessageAcknowledgementType();
+                response.OTA_HotelAvailNotifRS.Items = new object[] { ProcessingException(ex) };
+            }
+
+            return response;
+        }
+
         static public async Task<ReadRQResponse> OTA_ReadRQ(string pmsID, string usernameAuthenticate, string passwordAuthenticate, string hotelCode, ResStatus resStatus)
         {
             ReadRQResponse response = null;
