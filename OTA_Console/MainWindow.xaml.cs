@@ -38,7 +38,9 @@ namespace OTA_Console
 
         private async void button_Ping_Click(object sender, RoutedEventArgs e)
         {
-            
+            API.AvailStatusMessages availStatusMessages = new API.AvailStatusMessages(hotelCode);
+
+            return;
             textBlock_Ping.Text = "Sending...";
             PingRQResponse pingResponse = await API.OTA_PingRQ(username, password);
             if (pingResponse.OTA_PingRS.Items[0].GetType() == typeof(SuccessType))

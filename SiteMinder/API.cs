@@ -198,13 +198,14 @@ namespace pmsXchange
 
                 AvailStatusMessage()
                 {
-
+                    BookingLimit = null;
                 }
                 AvailStatusMessage(int bookingLimit)
                 {
                     BookingLimit = bookingLimit.ToString();
                 }
             }
+
             public string HotelCode { get; private set; }
             List<AvailStatusMessage> availStatusMessage;
 
