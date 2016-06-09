@@ -142,76 +142,79 @@ namespace pmsXchange
                 {
                     public sealed class LengthOfStay
                     {
-                        public string MinMaxMessageType { get; set; }
-                        public string Time { get; set; }
+                        public string MinMaxMessageType { get; private set; }
+                        public string Time { get; private set; }
+
+                        public LengthOfStay(string minMaxMessageType, string time)
+                        {
+                            MinMaxMessageType = minMaxMessageType;
+                            Time = time;
+                        }
                     }
 
-                    public LengthOfStay[] lengthOfStay { get; private set; }
+                    public List<LengthOfStay> LengthOfStayNodeList { get; private set; }
 
-                    LengthsOfStay(bool setMinLOS, bool setMaxLOS, int minTime, int maxTime)
+                    public LengthsOfStay(int minTime, int maxTime)
                     {
-                        if (!(setMinLOS || setMaxLOS))
+                        //
+                        // Set minTime OR maxTime to 0 if not used; otherwise, at least one of them must be in the range of 1 to 999.
+                        // minStay = 1 - no minimum stay requirement.
+                        // maxStay = 999 - no maximum stay requirement.
+                        //
+
+                        if ((minTime <= 0 || minTime > 999) && (maxTime <= 0 || maxTime > 999))
                         {
                             throw new Exception("LengthsOfStay: invalid arguments.");
                         }
 
-                        if (setMinLOS && setMaxLOS)
+                        if (minTime > 1 && (maxTime < 999 && maxTime >= 1) && minTime > maxTime)
                         {
-                            if (minTime > maxTime)
-                            {
-                                throw new Exception("LengthsOfStay: minTime can't be greater than maxTime.");
-                            }
+                            throw new Exception("LengthsOfStay: minTime can't be greater than maxTime.");
+                        }
+                        
+
+                        LengthOfStayNodeList = new List<LengthOfStay>();
+
+                        if (minTime > 0)
+                        {
+                            LengthOfStay lengthOfStay = new LengthOfStay("SetMinLOS", minTime.ToString());
+                            LengthOfStayNodeList.Add(lengthOfStay);
                         }
 
-
-                        lengthOfStay = new LengthOfStay[Convert.ToInt32(setMinLOS) + Convert.ToInt32(setMaxLOS)];
-
-                        if (setMinLOS)
+                        if (maxTime > 0)
                         {
-                            if (minTime < 1 || minTime > 999)
-                            {
-                                lengthOfStay = null;
-                                throw new Exception("LengthsOfStay: minTime must be between 1 and 999.");
-                            }
-
-                            lengthOfStay[0].MinMaxMessageType = "SetMinLOS";
-                            lengthOfStay[0].Time = minTime.ToString();
-                        }
-
-                        if (setMaxLOS)
-                        {
-                            if (maxTime < 1 || maxTime > 999)
-                            {
-                                lengthOfStay = null;
-                                throw new Exception("LengthsOfStay: maxTime must be between 1 and 999.");
-                            }
-
-                            lengthOfStay[Convert.ToInt32(setMinLOS) + Convert.ToInt32(setMaxLOS)].MinMaxMessageType = "SetMaxLOS";
-                            lengthOfStay[Convert.ToInt32(setMinLOS) + Convert.ToInt32(setMaxLOS)].Time = maxTime.ToString();
+                            LengthOfStay lengthOfStay = new LengthOfStay("SetMaxLOS", maxTime.ToString());
+                            LengthOfStayNodeList.Add(lengthOfStay);
                         }
 
                     }
                 }
 
                 public string BookingLimit { get; private set; }
-                LengthsOfStay lengthsOfStay;
+                public LengthsOfStay LengthsOfStayNode { get; set; }
 
-                AvailStatusMessage()
+                public AvailStatusMessage()
                 {
                     BookingLimit = null;
                 }
-                AvailStatusMessage(int bookingLimit)
+                public AvailStatusMessage(int bookingLimit)
                 {
+                    if(bookingLimit <= 0)
+                    {
+                        throw new Exception("AvailStatusMessage: bookingLimit must be a positive integer.");
+                    }
+
                     BookingLimit = bookingLimit.ToString();
                 }
             }
 
             public string HotelCode { get; private set; }
-            List<AvailStatusMessage> availStatusMessage;
+            public List<AvailStatusMessage> AvailStatusMessageNodeList;
 
-            AvailStatusMessages(string hotelCode)
+            public AvailStatusMessages(string hotelCode)
             {
                 HotelCode = hotelCode;
+                AvailStatusMessageNodeList = new List<AvailStatusMessage>();
             }
         }
 

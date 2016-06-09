@@ -38,7 +38,16 @@ namespace OTA_Console
 
         private async void button_Ping_Click(object sender, RoutedEventArgs e)
         {
-            API.AvailStatusMessages availStatusMessages = new API.AvailStatusMessages(hotelCode);
+            try
+            {
+                API.AvailStatusMessages availStatusMessages = new API.AvailStatusMessages(hotelCode);
+                API.AvailStatusMessages.AvailStatusMessage availStatusMessage = new API.AvailStatusMessages.AvailStatusMessage(1);
+                availStatusMessage.LengthsOfStayNode = new API.AvailStatusMessages.AvailStatusMessage.LengthsOfStay(1, 999);
+                availStatusMessages.AvailStatusMessageNodeList.Add(availStatusMessage);
+            }
+            catch(Exception ex)
+            {
+            }
 
             return;
             textBlock_Ping.Text = "Sending...";
