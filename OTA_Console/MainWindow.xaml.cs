@@ -41,7 +41,10 @@ namespace OTA_Console
             try
             {
                 API.AvailStatusMessages availStatusMessages = new API.AvailStatusMessages(hotelCode);
-                API.AvailStatusMessages.AvailStatusMessage availStatusMessage = new API.AvailStatusMessages.AvailStatusMessage(1);
+                DateTime start = new DateTime(2016, 7, 20);
+                DateTime end = new DateTime(2016, 8, 14);
+                API.AvailStatusMessages.AvailStatusMessage.StatusApplicationControl statusApplicationControl = new API.AvailStatusMessages.AvailStatusMessage.StatusApplicationControl(start, end, "there", "123", weds:false);
+                API.AvailStatusMessages.AvailStatusMessage availStatusMessage = new API.AvailStatusMessages.AvailStatusMessage(statusApplicationControl, 1);
                 availStatusMessage.LengthsOfStayNode = new API.AvailStatusMessages.AvailStatusMessage.LengthsOfStay(1, 999);
                 availStatusMessages.AvailStatusMessageNodeList.Add(availStatusMessage);
             }

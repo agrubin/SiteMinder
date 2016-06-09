@@ -138,6 +138,40 @@ namespace pmsXchange
         {
             public sealed class AvailStatusMessage
             {
+                public sealed class StatusApplicationControl
+                {
+                    public string Start { get; private set; }
+                    public string End { get; private set; }
+                    public string RatePlanCode { get; private set; }
+                    public string InvTypeCode { get; private set; }
+                    public string Mon { get; private set; }
+                    public string Tue { get; private set; }
+                    public string Weds { get; private set; }
+                    public string Thur { get; private set; }
+                    public string Fri { get; private set; }
+                    public string Sat { get; private set; }
+                    public string Sun { get; private set; }
+
+                    public StatusApplicationControl(DateTime start, DateTime end, string ratePlanCode, string invTypeCode, bool mon = true, bool tue = true, bool weds = true, bool thur = true, bool fri = true, bool sat = true, bool sun = true)
+                    {
+                        if (DateTime.Compare(start, end) > 0 || (end - DateTime.Today).TotalDays > 400)
+                        {
+                            throw new Exception("StatusApplicationControl: invalid dates.");
+                        }
+                        Start = start.ToString("yyyy-MM-dd");
+                        End = end.ToString("yyyy-MM-dd");
+                        RatePlanCode = ratePlanCode;
+                        InvTypeCode = invTypeCode;
+                        Mon = mon ? "1" : "0";
+                        Tue = tue ? "1" : "0";
+                        Weds = weds ? "1" : "0";
+                        Thur = thur ? "1" : "0";
+                        Fri = fri ? "1" : "0";
+                        Sat = sat ? "1" : "0";
+                        Sun = sun ? "1" : "0";
+                    }
+                }
+
                 public sealed class LengthsOfStay
                 {
                     public sealed class LengthOfStay
@@ -193,11 +227,11 @@ namespace pmsXchange
                 public string BookingLimit { get; private set; }
                 public LengthsOfStay LengthsOfStayNode { get; set; }
 
-                public AvailStatusMessage()
+                public AvailStatusMessage(StatusApplicationControl statusApplicationControl)
                 {
                     BookingLimit = null;
                 }
-                public AvailStatusMessage(int bookingLimit)
+                public AvailStatusMessage(StatusApplicationControl statusApplicationControl, int bookingLimit)
                 {
                     if(bookingLimit <= 0)
                     {
@@ -312,6 +346,7 @@ namespace pmsXchange
                 body.TimeStamp = DateTime.Now;
                 body.TimeStampSpecified = true;
                 body.POS = CreatePOS(pmsID);
+
             }
             catch(Exception ex)
             {
@@ -319,7 +354,7 @@ namespace pmsXchange
                 response.OTA_HotelAvailNotifRS = new MessageAcknowledgementType();
                 response.OTA_HotelAvailNotifRS.Items = new object[] { ProcessingException(ex) };
             }
-
+            
             return response;
         }
 
