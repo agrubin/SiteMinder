@@ -140,6 +140,21 @@ namespace pmsXchange
             {
                 public sealed class StatusApplicationControl
                 {
+                    public sealed class DestinationSystemCodes
+                    {
+                        public sealed class DestinationSystemCode
+                        {
+                            public string innerText { get; private set; }
+                        }
+
+                        public List<DestinationSystemCode> DestinationSystemCodeNodeList { get; private set; }
+
+                        public DestinationSystemCodes(List<DestinationSystemCode> destinationSystemCodeNodeList)
+                        {
+                            DestinationSystemCodeNodeList = destinationSystemCodeNodeList;
+                        }
+                    }
+
                     public string Start { get; private set; }
                     public string End { get; private set; }
                     public string RatePlanCode { get; private set; }
@@ -151,8 +166,14 @@ namespace pmsXchange
                     public string Fri { get; private set; }
                     public string Sat { get; private set; }
                     public string Sun { get; private set; }
+                    public DestinationSystemCodes DestinationSystemCodesNode { get; private set; }
 
-                    public StatusApplicationControl(DateTime start, DateTime end, string ratePlanCode, string invTypeCode, bool mon = true, bool tue = true, bool weds = true, bool thur = true, bool fri = true, bool sat = true, bool sun = true)
+                    public StatusApplicationControl(DateTime start, 
+                                                    DateTime end, 
+                                                    string ratePlanCode, 
+                                                    string invTypeCode, 
+                                                    List<DestinationSystemCodes.DestinationSystemCode> destinationSystemCodeList,
+                                                    bool mon = true, bool tue = true, bool weds = true, bool thur = true, bool fri = true, bool sat = true, bool sun = true)
                     {
                         if (DateTime.Compare(start, end) > 0 || (end - DateTime.Today).TotalDays > 400)
                         {
@@ -169,6 +190,11 @@ namespace pmsXchange
                         Fri = fri ? "1" : "0";
                         Sat = sat ? "1" : "0";
                         Sun = sun ? "1" : "0";
+
+                        if (destinationSystemCodeList != null)
+                        {
+                            DestinationSystemCodesNode = new DestinationSystemCodes(destinationSystemCodeList);
+                        }
                     }
                 }
 
@@ -225,11 +251,17 @@ namespace pmsXchange
                 }
 
                 public string BookingLimit { get; private set; }
-                public LengthsOfStay LengthsOfStayNode { get; set; }
+                public LengthsOfStay LengthsOfStayNode { get; private set; }
 
                 public AvailStatusMessage(StatusApplicationControl statusApplicationControl)
                 {
                     BookingLimit = null;
+                }
+
+                public AvailStatusMessage(StatusApplicationControl statusApplicationControl, int minTime, int maxTime)
+                {
+                    BookingLimit = null;    
+                    LengthsOfStayNode = new LengthsOfStay(minTime, maxTime);                  
                 }
                 public AvailStatusMessage(StatusApplicationControl statusApplicationControl, int bookingLimit)
                 {
@@ -238,17 +270,22 @@ namespace pmsXchange
                         throw new Exception("AvailStatusMessage: bookingLimit must be a positive integer.");
                     }
 
+                    if(statusApplicationControl.DestinationSystemCodesNode != null)
+                    {
+                        throw new Exception("BookingLimit may not be used with DestinationSystemCodesNode because it is not possible to update availability per channel.");
+                    }
+
                     BookingLimit = bookingLimit.ToString();
                 }
             }
 
             public string HotelCode { get; private set; }
-            public List<AvailStatusMessage> AvailStatusMessageNodeList;
+            public List<AvailStatusMessage> AvailStatusMessageNodeList { get; private set; }
 
-            public AvailStatusMessages(string hotelCode)
+            public AvailStatusMessages(string hotelCode, List<AvailStatusMessage> availStatusMessageList)
             {
                 HotelCode = hotelCode;
-                AvailStatusMessageNodeList = new List<AvailStatusMessage>();
+                AvailStatusMessageNodeList = availStatusMessageList;
             }
         }
 
