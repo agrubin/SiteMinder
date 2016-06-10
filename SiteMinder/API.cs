@@ -258,11 +258,20 @@ namespace pmsXchange
                     BookingLimit = null;
                 }
 
+                //
+                // Optional minimum and maxumum lengths of stay specified by minTime and maxTime.
+                //
+
                 public AvailStatusMessage(StatusApplicationControl statusApplicationControl, int minTime, int maxTime)
                 {
                     BookingLimit = null;    
                     LengthsOfStayNode = new LengthsOfStay(minTime, maxTime);                  
                 }
+
+                //
+                // Set availability by specifing the booking limit.
+                //
+
                 public AvailStatusMessage(StatusApplicationControl statusApplicationControl, int bookingLimit)
                 {
                     if(bookingLimit <= 0)
