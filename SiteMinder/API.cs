@@ -18,6 +18,16 @@ namespace pmsXchange
 
     public static class API
     {
+        public enum Restrictions
+        {
+            None,
+            Stop_Sold,
+            Opened_For_Sale,
+            Closed_To_Arrival,
+            Open_To_Arrival,
+            Closed_To_Deaprture,
+            Open_To_Departure
+        }
         public enum ResStatus
         {
             All,        // All reservations.
@@ -198,6 +208,54 @@ namespace pmsXchange
                     }
                 }
 
+                public sealed class RestricitionStatus
+                {
+                    public string Restriction { get; private set; }
+                    public string Status { get; private set; }
+
+                    public RestricitionStatus(Restrictions restrictions)
+                    {
+                        switch (restrictions)
+                        {
+                            case Restrictions.None:
+                                Restriction = null;
+                                Status = null;
+                                break;
+
+                            case Restrictions.Stop_Sold:
+                                Restriction = null;
+                                Status = "Close";
+                                break;
+
+                            case Restrictions.Opened_For_Sale:
+                                Restriction = null;
+                                Status = "Open";
+                                break;
+
+                            case Restrictions.Closed_To_Arrival:
+                                Restriction = "Arrival";
+                                Status = "Close";
+                                break;
+
+                            case Restrictions.Open_To_Arrival:
+                                Restriction = "Arrival";
+                                Status = "Open";
+                                break;
+
+                            case Restrictions.Closed_To_Deaprture:
+                                Restriction = "Departure";
+                                Status = "Close";
+                                break;
+
+                            case Restrictions.Open_To_Departure:
+                                Restriction = "Departure";
+                                Status = "Open";
+                                break;
+
+                        }
+                    }
+                }
+
                 public sealed class LengthsOfStay
                 {
                     public sealed class LengthOfStay
@@ -252,27 +310,33 @@ namespace pmsXchange
 
                 public string BookingLimit { get; private set; }
                 public LengthsOfStay LengthsOfStayNode { get; private set; }
+                public RestricitionStatus RestricitionStatusNode { get; private set; }
+                public StatusApplicationControl StatusApplicationControlNode { get; private set; }
 
-                public AvailStatusMessage(StatusApplicationControl statusApplicationControl)
+                public AvailStatusMessage(StatusApplicationControl statusApplicationControl, Restrictions restricitions)
                 {
                     BookingLimit = null;
+                    RestricitionStatusNode = new RestricitionStatus(restricitions);
+                    StatusApplicationControlNode = statusApplicationControl;
                 }
 
                 //
                 // Optional minimum and maxumum lengths of stay specified by minTime and maxTime.
                 //
 
-                public AvailStatusMessage(StatusApplicationControl statusApplicationControl, int minTime, int maxTime)
+                public AvailStatusMessage(StatusApplicationControl statusApplicationControl, Restrictions restricitions, int minTime, int maxTime)
                 {
                     BookingLimit = null;    
-                    LengthsOfStayNode = new LengthsOfStay(minTime, maxTime);                  
+                    LengthsOfStayNode = new LengthsOfStay(minTime, maxTime);
+                    RestricitionStatusNode = new RestricitionStatus(restricitions);
+                    StatusApplicationControlNode = statusApplicationControl;              
                 }
 
                 //
                 // Set availability by specifing the booking limit.
                 //
 
-                public AvailStatusMessage(StatusApplicationControl statusApplicationControl, int bookingLimit)
+                public AvailStatusMessage(StatusApplicationControl statusApplicationControl, Restrictions restricitions, int bookingLimit)
                 {
                     if(bookingLimit <= 0)
                     {
@@ -285,6 +349,8 @@ namespace pmsXchange
                     }
 
                     BookingLimit = bookingLimit.ToString();
+                    RestricitionStatusNode = new RestricitionStatus(restricitions);
+                    StatusApplicationControlNode = statusApplicationControl;
                 }
             }
 
