@@ -200,6 +200,14 @@ namespace pmsXchange
                         RatePlanCode = ratePlanCode;
                         InvTypeCode = invTypeCode;
 
+                        Mon = mon;
+                        Tue = tue;
+                        Weds = weds;
+                        Thur = thur;
+                        Fri = fri;
+                        Sat = sat;
+                        Sun = sun;
+
                         if (destinationSystemCodeList != null)
                         {
                             DestinationSystemCodesNode = new DestinationSystemCodes(destinationSystemCodeList);
