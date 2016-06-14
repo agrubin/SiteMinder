@@ -9,13 +9,6 @@ using pmsXchange.pmsXchangeService;
 
 namespace pmsXchange
 {
-    //
-    // The .NET service reference for pmsXchange uses a special version of the SiteMinder
-    // WSDL file generated specifically for .NET clients:
-    //
-    // https://cmtpi.siteminder.com/pmsxchangev2/services/SPIORANGE/pmsxchange_flat.wsdl 
-    //
-
     public static class API
     {
         public enum Restrictions
@@ -697,14 +690,6 @@ namespace pmsXchange
             usernametoken.AppendChild(password);
 
             return new XmlElement[] { usernametoken };
-        }
-
-        static private System.Xml.XmlElement[] CreateHotelReservations()
-        {
-            XmlDocument doc = new XmlDocument();
-            XmlElement hotelReservations = doc.CreateElement("HotelReservations");
-
-            return new XmlElement[] { hotelReservations };
         }
     }
 }

@@ -3,6 +3,13 @@ using System.ServiceModel;
 using pmsXchange.pmsXchangeService;
 
 //
+// SiteMinder WSDL file generated specifically for .NET clients:
+//
+// https://cmtpi.siteminder.com/pmsxchangev2/services/SPIORANGE/pmsxchange_flat.wsdl 
+//
+
+
+//
 // The service connection implemeted as a singleton so it is only instantiated and initalized one time
 // upon the first access, then the same connection is returned on each subsequent access.  Use only for
 // synchronous calls.
