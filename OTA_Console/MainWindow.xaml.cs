@@ -41,6 +41,7 @@ namespace OTA_Console
             try
             {
                 API.AvailStatusMessages availStatusMessages = new API.AvailStatusMessages(hotelCode, null);
+                API.OTA_HotelAvailNotifRQ(pmsID, username, password, availStatusMessages);
 
                // DateTime start = new DateTime(2016, 7, 20);
                // DateTime end = new DateTime(2016, 8, 14);

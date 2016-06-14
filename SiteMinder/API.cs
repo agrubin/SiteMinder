@@ -169,13 +169,13 @@ namespace pmsXchange
                     public string End { get; private set; }
                     public string RatePlanCode { get; private set; }
                     public string InvTypeCode { get; private set; }
-                    public string Mon { get; private set; }
-                    public string Tue { get; private set; }
-                    public string Weds { get; private set; }
-                    public string Thur { get; private set; }
-                    public string Fri { get; private set; }
-                    public string Sat { get; private set; }
-                    public string Sun { get; private set; }
+                    public bool Mon { get; private set; }
+                    public bool Tue { get; private set; }
+                    public bool Weds { get; private set; }
+                    public bool Thur { get; private set; }
+                    public bool Fri { get; private set; }
+                    public bool Sat { get; private set; }
+                    public bool Sun { get; private set; }
                     public DestinationSystemCodes DestinationSystemCodesNode { get; private set; }
 
                     public StatusApplicationControl(DateTime start, 
@@ -189,17 +189,16 @@ namespace pmsXchange
                         {
                             throw new Exception("StatusApplicationControl: invalid dates.");
                         }
+
+                        if(invTypeCode == null)
+                        {
+                            throw new Exception("StatusApplicationControl: invTypeCode argument may not be null.");
+                        }
+
                         Start = start.ToString("yyyy-MM-dd");
                         End = end.ToString("yyyy-MM-dd");
                         RatePlanCode = ratePlanCode;
                         InvTypeCode = invTypeCode;
-                        Mon = mon ? "1" : "0";
-                        Tue = tue ? "1" : "0";
-                        Weds = weds ? "1" : "0";
-                        Thur = thur ? "1" : "0";
-                        Fri = fri ? "1" : "0";
-                        Sat = sat ? "1" : "0";
-                        Sun = sun ? "1" : "0";
 
                         if (destinationSystemCodeList != null)
                         {
@@ -217,11 +216,6 @@ namespace pmsXchange
                     {
                         switch (restrictions)
                         {
-                            case Restrictions.None:
-                                Restriction = null;
-                                Status = null;
-                                break;
-
                             case Restrictions.Stop_Sold:
                                 Restriction = null;
                                 Status = "Close";
@@ -313,10 +307,20 @@ namespace pmsXchange
                 public RestricitionStatus RestricitionStatusNode { get; private set; }
                 public StatusApplicationControl StatusApplicationControlNode { get; private set; }
 
-                public AvailStatusMessage(StatusApplicationControl statusApplicationControl, Restrictions restricitions)
+                public AvailStatusMessage(StatusApplicationControl statusApplicationControl, Restrictions restrictions)
                 {
+                    if (statusApplicationControl == null)
+                    {
+                        throw new Exception("AvailStatusMessage: StatusApplicationControl argument may not be null.");
+                    }
+
                     BookingLimit = null;
-                    RestricitionStatusNode = new RestricitionStatus(restricitions);
+
+                    if (restrictions != Restrictions.None)
+                    {
+                        RestricitionStatusNode = new RestricitionStatus(restrictions);
+                    }
+
                     StatusApplicationControlNode = statusApplicationControl;
                 }
 
@@ -324,11 +328,21 @@ namespace pmsXchange
                 // Optional minimum and maxumum lengths of stay specified by minTime and maxTime.
                 //
 
-                public AvailStatusMessage(StatusApplicationControl statusApplicationControl, Restrictions restricitions, int minTime, int maxTime)
+                public AvailStatusMessage(StatusApplicationControl statusApplicationControl, Restrictions restrictions, int minTime, int maxTime)
                 {
+                    if (statusApplicationControl == null)
+                    {
+                        throw new Exception("AvailStatusMessage: StatusApplicationControl argument may not be null.");
+                    }
+
                     BookingLimit = null;    
                     LengthsOfStayNode = new LengthsOfStay(minTime, maxTime);
-                    RestricitionStatusNode = new RestricitionStatus(restricitions);
+
+                    if (restrictions != Restrictions.None)
+                    {
+                        RestricitionStatusNode = new RestricitionStatus(restrictions);
+                    }
+
                     StatusApplicationControlNode = statusApplicationControl;              
                 }
 
@@ -336,8 +350,13 @@ namespace pmsXchange
                 // Set availability by specifing the booking limit.
                 //
 
-                public AvailStatusMessage(StatusApplicationControl statusApplicationControl, Restrictions restricitions, int bookingLimit)
+                public AvailStatusMessage(StatusApplicationControl statusApplicationControl, Restrictions restrictions, int bookingLimit)
                 {
+                    if(statusApplicationControl == null)
+                    {
+                        throw new Exception("AvailStatusMessage: StatusApplicationControl argument may not be null.");
+                    }
+
                     if(bookingLimit <= 0)
                     {
                         throw new Exception("AvailStatusMessage: bookingLimit must be a positive integer.");
@@ -349,7 +368,10 @@ namespace pmsXchange
                     }
 
                     BookingLimit = bookingLimit.ToString();
-                    RestricitionStatusNode = new RestricitionStatus(restricitions);
+                    if (restrictions != Restrictions.None)
+                    {
+                        RestricitionStatusNode = new RestricitionStatus(restrictions);
+                    }
                     StatusApplicationControlNode = statusApplicationControl;
                 }
             }
@@ -444,7 +466,7 @@ namespace pmsXchange
             return response;
         }
 
-        static public async Task<HotelAvailNotifRQResponse> OTA_HotelAvailNotifRQ(string pmsID, string usernameAuthenticate, string passwordAuthenticate)
+        static public async Task<HotelAvailNotifRQResponse> OTA_HotelAvailNotifRQ(string pmsID, string usernameAuthenticate, string passwordAuthenticate, AvailStatusMessages availStatusMessages)
         {
             HotelAvailNotifRQResponse response = null;
 
@@ -459,6 +481,45 @@ namespace pmsXchange
                 body.TimeStampSpecified = true;
                 body.POS = CreatePOS(pmsID);
 
+                body.AvailStatusMessages  = new OTA_HotelAvailNotifRQAvailStatusMessages();
+                body.AvailStatusMessages.AvailStatusMessage = new AvailStatusMessageType[availStatusMessages.AvailStatusMessageNodeList.Count];
+
+                int index = 0;
+
+                foreach(AvailStatusMessages.AvailStatusMessage aSM in availStatusMessages.AvailStatusMessageNodeList)
+                {
+                    var bSM = body.AvailStatusMessages.AvailStatusMessage[index];
+
+                    bSM.StatusApplicationControl = new StatusApplicationControlType();
+                    bSM.StatusApplicationControl.Start = aSM.StatusApplicationControlNode.Start;
+                    bSM.StatusApplicationControl.End = aSM.StatusApplicationControlNode.End;
+                    bSM.StatusApplicationControl.RatePlanCode = aSM.StatusApplicationControlNode.RatePlanCode;
+                    bSM.StatusApplicationControl.InvTypeCode = aSM.StatusApplicationControlNode.InvTypeCode;
+                    bSM.StatusApplicationControl.Mon = aSM.StatusApplicationControlNode.Mon;
+                    bSM.StatusApplicationControl.Tue = aSM.StatusApplicationControlNode.Tue;
+                    bSM.StatusApplicationControl.Weds = aSM.StatusApplicationControlNode.Weds;
+                    bSM.StatusApplicationControl.Thur = aSM.StatusApplicationControlNode.Thur;
+                    bSM.StatusApplicationControl.Fri = aSM.StatusApplicationControlNode.Fri;
+                    bSM.StatusApplicationControl.Sat = aSM.StatusApplicationControlNode.Sat;
+                    bSM.StatusApplicationControl.Sun = aSM.StatusApplicationControlNode.Sun;
+                    bSM.StatusApplicationControl.MonSpecified = true;
+                    bSM.StatusApplicationControl.TueSpecified = true; 
+                    bSM.StatusApplicationControl.WedsSpecified = true; 
+                    bSM.StatusApplicationControl.ThurSpecified = true;
+                    bSM.StatusApplicationControl.FriSpecified = true; 
+                    bSM.StatusApplicationControl.SatSpecified = true; 
+                    bSM.StatusApplicationControl.SunSpecified = true; 
+
+                    bSM.BookingLimit = aSM.BookingLimit;
+                    
+                    body.AvailStatusMessages.AvailStatusMessage[index++] = bSM;
+                }
+
+                //
+                // Send availability update.
+                //
+
+                response = await service.HotelAvailNotifRQAsync(CreateSecurityHeader(usernameAuthenticate, passwordAuthenticate), body).ConfigureAwait(false);
             }
             catch(Exception ex)
             {
@@ -466,6 +527,7 @@ namespace pmsXchange
                 response.OTA_HotelAvailNotifRS = new MessageAcknowledgementType();
                 response.OTA_HotelAvailNotifRS.Items = new object[] { ProcessingException(ex) };
             }
+
             
             return response;
         }
@@ -484,6 +546,7 @@ namespace pmsXchange
                 body.TimeStamp = DateTime.Now;
                 body.TimeStampSpecified = true;
                 body.POS = CreatePOS(pmsID);
+
                 OTA_ReadRQReadRequests readRequests = new OTA_ReadRQReadRequests();
                 OTA_ReadRQReadRequestsHotelReadRequest hotelReadRequest = new OTA_ReadRQReadRequestsHotelReadRequest();
                 hotelReadRequest.HotelCode = hotelCode;
