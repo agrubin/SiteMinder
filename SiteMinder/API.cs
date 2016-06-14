@@ -482,13 +482,14 @@ namespace pmsXchange
                 body.POS = CreatePOS(pmsID);
 
                 body.AvailStatusMessages  = new OTA_HotelAvailNotifRQAvailStatusMessages();
+                body.AvailStatusMessages.HotelCode = availStatusMessages.HotelCode;
                 body.AvailStatusMessages.AvailStatusMessage = new AvailStatusMessageType[availStatusMessages.AvailStatusMessageNodeList.Count];
 
                 int index = 0;
 
                 foreach(AvailStatusMessages.AvailStatusMessage aSM in availStatusMessages.AvailStatusMessageNodeList)
                 {
-                    var bSM = body.AvailStatusMessages.AvailStatusMessage[index];
+                    AvailStatusMessageType bSM = new AvailStatusMessageType();
 
                     bSM.StatusApplicationControl = new StatusApplicationControlType();
                     bSM.StatusApplicationControl.Start = aSM.StatusApplicationControlNode.Start;
@@ -652,7 +653,7 @@ namespace pmsXchange
         static private SourceType[] CreatePOS(string pmsID)
         {
             SourceTypeRequestorID strid = new SourceTypeRequestorID();
-            strid.Type = OTA_ID_Type.ERSP.ToString();
+            strid.Type = ((int)OTA_ID_Type.ERSP).ToString();
             strid.ID = pmsID;
 
             SourceType sourcetype = new SourceType();

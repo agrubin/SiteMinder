@@ -40,19 +40,22 @@ namespace OTA_Console
         {
             try
             {
-                API.AvailStatusMessages availStatusMessages = new API.AvailStatusMessages(hotelCode, null);
-                API.OTA_HotelAvailNotifRQ(pmsID, username, password, availStatusMessages);
+ 
 
-               // DateTime start = new DateTime(2016, 7, 20);
-               // DateTime end = new DateTime(2016, 8, 14);
-               // API.AvailStatusMessages.AvailStatusMessage.StatusApplicationControl statusApplicationControl = new API.AvailStatusMessages.AvailStatusMessage.StatusApplicationControl(start, end, "there", "123", null, weds:false);
-               // API.AvailStatusMessages.AvailStatusMessage availStatusMessage = new API.AvailStatusMessages.AvailStatusMessage(statusApplicationControl, 1);
+                DateTime start = new DateTime(2016, 7, 20);
+                DateTime end = new DateTime(2016, 8, 14);
+                API.AvailStatusMessages.AvailStatusMessage.StatusApplicationControl statusApplicationControl = new API.AvailStatusMessages.AvailStatusMessage.StatusApplicationControl(start, end, "S2S", "TR", null, weds:false);
+                API.AvailStatusMessages.AvailStatusMessage availStatusMessage = new API.AvailStatusMessages.AvailStatusMessage(statusApplicationControl, API.Restrictions.None, 1);
+
+                API.AvailStatusMessages availStatusMessages = new API.AvailStatusMessages(hotelCode, new List<API.AvailStatusMessages.AvailStatusMessage> { availStatusMessage });
+                HotelAvailNotifRQResponse availResponse = await API.OTA_HotelAvailNotifRQ(pmsID, username, password, availStatusMessages);
             }
             catch(Exception ex)
             {
             }
 
             return;
+
             textBlock_Ping.Text = "Sending...";
             PingRQResponse pingResponse = await API.OTA_PingRQ(username, password);
             if (pingResponse.OTA_PingRS.Items[0].GetType() == typeof(SuccessType))
