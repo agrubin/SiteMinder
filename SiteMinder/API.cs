@@ -11,6 +11,16 @@ namespace pmsXchange
 {
     public static class API
     {
+        static SortedDictionary<string, string> Booking_Agent_Codes = new SortedDictionary<string, string>
+        {
+            {"Booking.com", "BDC"},
+            {"BookingButton", "BBN"},
+            {"Expedia", "EXP"}
+        };
+       // comboBox1.DataSource = new BindingSource(userCache, null);
+        //comboBox1.DisplayMember = "Key";
+       // comboBox1.ValueMember = "Value";
+
         public enum Restrictions
         {
             None,
@@ -369,11 +379,7 @@ namespace pmsXchange
             {
                 PmsXchangeServiceClient service = new AsyncServiceConnection().service;
 
-                OTA_NotifReportRQ body = new OTA_NotifReportRQ();
-                body.Version = 1.0M;
-                body.EchoToken = Guid.NewGuid().ToString();  // Echo token must be unique.            
-                body.TimeStamp = DateTime.Now;
-                body.TimeStampSpecified = true;
+                OTA_NotifReportRQ body = new OTA_NotifReportRQ() { Version = 1.0M, EchoToken = Guid.NewGuid().ToString() /* Echo token must be unique.            */, TimeStamp = DateTime.Now, TimeStampSpecified = true };
                 if (resError == null)
                 {
                     body.Items = new object[] { new SuccessType() };
@@ -447,14 +453,7 @@ namespace pmsXchange
 
             try
             {
-                OTA_HotelAvailNotifRQ body = new OTA_HotelAvailNotifRQ();
-                body.Version = 1.0M;
-                body.EchoToken = Guid.NewGuid().ToString();  // Echo token must be unique.            
-                body.TimeStamp = DateTime.Now;
-                body.TimeStampSpecified = true;
-                body.POS = CreatePOS(pmsID);
-
-                body.AvailStatusMessages  = new OTA_HotelAvailNotifRQAvailStatusMessages();
+                OTA_HotelAvailNotifRQ body = new OTA_HotelAvailNotifRQ() { Version = 1.0M, EchoToken = Guid.NewGuid().ToString() /* Echo token must be unique.            */, TimeStamp = DateTime.Now, TimeStampSpecified = true, POS = CreatePOS(pmsID), AvailStatusMessages = new OTA_HotelAvailNotifRQAvailStatusMessages() };
                 body.AvailStatusMessages.HotelCode = availStatusMessages.HotelCode;
                 body.AvailStatusMessages.AvailStatusMessage = new AvailStatusMessageType[availStatusMessages.AvailStatusMessageNodeList.Count];
 
@@ -462,9 +461,7 @@ namespace pmsXchange
 
                 foreach(AvailStatusMessages.AvailStatusMessage aSM in availStatusMessages.AvailStatusMessageNodeList)
                 {
-                    AvailStatusMessageType bSM = new AvailStatusMessageType();
-
-                    bSM.StatusApplicationControl = new StatusApplicationControlType();
+                    AvailStatusMessageType bSM = new AvailStatusMessageType() { StatusApplicationControl = new StatusApplicationControlType() };
                     bSM.StatusApplicationControl.Start = aSM.StatusApplicationControlNode.Start;
                     bSM.StatusApplicationControl.End = aSM.StatusApplicationControlNode.End;
                     bSM.StatusApplicationControl.RatePlanCode = aSM.StatusApplicationControlNode.RatePlanCode;
@@ -571,21 +568,13 @@ namespace pmsXchange
             {
                 PmsXchangeServiceClient service = new AsyncServiceConnection().service;
 
-                OTA_ReadRQ body = new OTA_ReadRQ();
-                body.Version = 1.0M;
-                body.EchoToken = Guid.NewGuid().ToString();  // Echo token must be unique.            
-                body.TimeStamp = DateTime.Now;
-                body.TimeStampSpecified = true;
-                body.POS = CreatePOS(pmsID);
+                OTA_ReadRQ body = new OTA_ReadRQ() { Version = 1.0M, EchoToken = Guid.NewGuid().ToString() /* Echo token must be unique.            */, TimeStamp = DateTime.Now, TimeStampSpecified = true, POS = CreatePOS(pmsID) };
 
                 OTA_ReadRQReadRequests readRequests = new OTA_ReadRQReadRequests();
-                OTA_ReadRQReadRequestsHotelReadRequest hotelReadRequest = new OTA_ReadRQReadRequestsHotelReadRequest();
-                hotelReadRequest.HotelCode = hotelCode;
+                OTA_ReadRQReadRequestsHotelReadRequest hotelReadRequest = new OTA_ReadRQReadRequestsHotelReadRequest() { HotelCode = hotelCode };
                 readRequests.Items = new object[] { hotelReadRequest };
 
-                OTA_ReadRQReadRequestsHotelReadRequestSelectionCriteria selectionCriteria = new OTA_ReadRQReadRequestsHotelReadRequestSelectionCriteria();
-                selectionCriteria.SelectionType = OTA_ReadRQReadRequestsHotelReadRequestSelectionCriteriaSelectionType.Undelivered;
-                selectionCriteria.SelectionTypeSpecified = true;  // Must be set to true, or ReadRQ returns an error.
+                OTA_ReadRQReadRequestsHotelReadRequestSelectionCriteria selectionCriteria = new OTA_ReadRQReadRequestsHotelReadRequestSelectionCriteria() { SelectionType = OTA_ReadRQReadRequestsHotelReadRequestSelectionCriteriaSelectionType.Undelivered, SelectionTypeSpecified = true /* Must be set to true, or ReadRQ returns an error.*/ };
 
                 if (resStatus != ResStatus.All)
                 {
@@ -619,13 +608,8 @@ namespace pmsXchange
             {
                 PmsXchangeServiceClient service = new AsyncServiceConnection().service;
 
-                OTA_PingRQ body = new OTA_PingRQ();
-                body.Version = 1.0M;
-                body.EchoToken = Guid.NewGuid().ToString();  // Echo token must be unique.            
-                body.TimeStamp = DateTime.Now;
-                body.TimeStampSpecified = true;
-                body.EchoData = "good echo";
-                
+                OTA_PingRQ body = new OTA_PingRQ() { Version = 1.0M, EchoToken = Guid.NewGuid().ToString() /* Echo token must be unique.*/, TimeStamp = DateTime.Now, TimeStampSpecified = true, EchoData = "good echo" };
+
                 //
                 // Send an asynchronous ping request.
                 //
@@ -660,18 +644,14 @@ namespace pmsXchange
 
         private static ErrorType CreateErrorType(OTA_ERR errCode, OTA_EWT errType, string errMsg)
         {
-            ErrorType error = new ErrorType();
-            error.Type = errType.ToString();
-            error.Code = errCode.ToString();
-            error.Value = errMsg;
+            ErrorType error = new ErrorType() { Type = errType.ToString(), Code = errCode.ToString(), Value = errMsg };
 
             return error;
         }
 
         static private SecurityHeaderType CreateSecurityHeader(string usernameAuthenticate, string passwordAuthenticate)
         {
-            SecurityHeaderType securityHeader = new SecurityHeaderType();
-            securityHeader.Any = CreateUserNameToken(usernameAuthenticate, passwordAuthenticate);
+            SecurityHeaderType securityHeader = new SecurityHeaderType() { Any = CreateUserNameToken(usernameAuthenticate, passwordAuthenticate) };
             return securityHeader;
         }
 
@@ -682,12 +662,8 @@ namespace pmsXchange
 
         static private SourceType[] CreatePOS(string pmsID)
         {
-            SourceTypeRequestorID strid = new SourceTypeRequestorID();
-            strid.Type = ((int)OTA_ID_Type.ERSP).ToString();
-            strid.ID = pmsID;
-
-            SourceType sourcetype = new SourceType();
-            sourcetype.RequestorID = strid;
+            SourceTypeRequestorID strid = new SourceTypeRequestorID() { Type = ((int)OTA_ID_Type.ERSP).ToString(), ID = pmsID };
+            SourceType sourcetype = new SourceType() { RequestorID = strid };
 
             return new SourceType[] { sourcetype };
         }
