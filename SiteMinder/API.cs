@@ -519,21 +519,26 @@ namespace pmsXchange
                     if(aSM.RestricitionStatusNode != null)
                     {
                         bSM.RestrictionStatus = new AvailStatusMessageTypeRestrictionStatus();
+
                         if (aSM.RestricitionStatusNode.Status == "Open")
                         {
                             bSM.RestrictionStatus.Status = AvailabilityStatusType.Open;
+                            bSM.RestrictionStatus.StatusSpecified = true;
                         }
                         if (aSM.RestricitionStatusNode.Status == "Close")
                         {
                             bSM.RestrictionStatus.Status = AvailabilityStatusType.Close;
+                            bSM.RestrictionStatus.StatusSpecified = true;
                         }
                         if (aSM.RestricitionStatusNode.Restriction == "Arrival")
                         {
                             bSM.RestrictionStatus.Restriction = RatePlanTypeRestrictionStatusRestriction.Arrival;
+                            bSM.RestrictionStatus.RestrictionSpecified = true;
                         }
                         if (aSM.RestricitionStatusNode.Restriction == "Departure")
                         {
                             bSM.RestrictionStatus.Restriction = RatePlanTypeRestrictionStatusRestriction.Departure;
+                            bSM.RestrictionStatus.RestrictionSpecified = true;
                         }
                     }
                     
