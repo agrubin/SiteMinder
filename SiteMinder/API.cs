@@ -267,15 +267,20 @@ namespace pmsXchange
 
                     public List<LengthOfStay> LengthOfStayNodeList { get; private set; }
 
-                    public LengthsOfStay(int minTime, int maxTime)
+                    public LengthsOfStay(int? minTime, int? maxTime)
                     {
                         //
-                        // Set minTime OR maxTime to 0 if not used; otherwise, at least one of them must be in the range of 1 to 999.
+                        // Set minTime AND/OR maxTime to null if not used; otherwise, at least one of them must be in the range of 1 to 999.
                         // minStay = 1 - no minimum stay requirement.
                         // maxStay = 999 - no maximum stay requirement.
                         //
 
-                        if ((minTime <= 0 || minTime > 999) && (maxTime <= 0 || maxTime > 999))
+                        if(minTime == null && maxTime == null)
+                        {
+                            return;
+                        }
+
+                        if (minTime <= 0 || minTime > 999 || maxTime <= 0 || maxTime > 999)
                         {
                             throw new Exception("LengthsOfStay: invalid arguments.");
                         }
@@ -308,67 +313,32 @@ namespace pmsXchange
                 public RestricitionStatus RestricitionStatusNode { get; private set; }
                 public StatusApplicationControl StatusApplicationControlNode { get; private set; }
 
-                public AvailStatusMessage(StatusApplicationControl statusApplicationControl, Restrictions restrictions)
-                {
-                    if (statusApplicationControl == null)
-                    {
-                        throw new Exception("AvailStatusMessage: StatusApplicationControl argument may not be null.");
-                    }
-
-                    BookingLimit = null;
-
-                    if (restrictions != Restrictions.None)
-                    {
-                        RestricitionStatusNode = new RestricitionStatus(restrictions);
-                    }
-
-                    StatusApplicationControlNode = statusApplicationControl;
-                }
-
                 //
                 // Optional minimum and maxumum lengths of stay specified by minTime and maxTime.
                 //
-
-                public AvailStatusMessage(StatusApplicationControl statusApplicationControl, Restrictions restrictions, int minTime, int maxTime)
-                {
-                    if (statusApplicationControl == null)
-                    {
-                        throw new Exception("AvailStatusMessage: StatusApplicationControl argument may not be null.");
-                    }
-
-                    BookingLimit = null;    
-                    LengthsOfStayNode = new LengthsOfStay(minTime, maxTime);
-
-                    if (restrictions != Restrictions.None)
-                    {
-                        RestricitionStatusNode = new RestricitionStatus(restrictions);
-                    }
-
-                    StatusApplicationControlNode = statusApplicationControl;              
-                }
 
                 //
                 // Set availability by specifing the booking limit.
                 //
 
-                public AvailStatusMessage(StatusApplicationControl statusApplicationControl, Restrictions restrictions, int bookingLimit)
+                public AvailStatusMessage(StatusApplicationControl statusApplicationControl, Restrictions restrictions, int? minTime = null, int? maxTime = null, int? bookingLimit = null)
                 {
                     if(statusApplicationControl == null)
                     {
                         throw new Exception("AvailStatusMessage: StatusApplicationControl argument may not be null.");
                     }
 
-                    if(bookingLimit <= 0)
-                    {
-                        throw new Exception("AvailStatusMessage: bookingLimit must be a positive integer.");
-                    }
-
-                    if(statusApplicationControl.DestinationSystemCodesNode != null)
+                    if(statusApplicationControl.DestinationSystemCodesNode != null && bookingLimit != null)
                     {
                         throw new Exception("BookingLimit may not be used with DestinationSystemCodesNode because it is not possible to update availability per channel.");
                     }
 
-                    BookingLimit = bookingLimit.ToString();
+                    if (bookingLimit != null)
+                    {
+                        BookingLimit = bookingLimit.ToString();
+                    }
+
+                    LengthsOfStayNode = new LengthsOfStay(minTime, maxTime);
 
                     if (restrictions != Restrictions.None)
                     {
@@ -515,6 +485,30 @@ namespace pmsXchange
                     bSM.StatusApplicationControl.SunSpecified = true; 
 
                     bSM.BookingLimit = aSM.BookingLimit;
+
+                    if(aSM.LengthsOfStayNode != null)
+                    {
+                        bSM.LengthsOfStay = new LengthsOfStayType();
+                        bSM.LengthsOfStay.LengthOfStay = new LengthsOfStayTypeLengthOfStay[aSM.LengthsOfStayNode.LengthOfStayNodeList.Count];
+
+                        int indexLS = 0;
+
+                        foreach(var lOS in aSM.LengthsOfStayNode.LengthOfStayNodeList)
+                        {
+                            bSM.LengthsOfStay.LengthOfStay[indexLS] = new LengthsOfStayTypeLengthOfStay();
+                            bSM.LengthsOfStay.LengthOfStay[indexLS].MinMaxMessageTypeSpecified = true;
+                            if (lOS.MinMaxMessageType == "SetMinLOS")
+                            {
+                                bSM.LengthsOfStay.LengthOfStay[indexLS].MinMaxMessageType = LengthsOfStayTypeLengthOfStayMinMaxMessageType.SetMinLOS;
+                            }
+                            else
+                            {
+                                bSM.LengthsOfStay.LengthOfStay[indexLS].MinMaxMessageType = LengthsOfStayTypeLengthOfStayMinMaxMessageType.SetMaxLOS;
+
+                            }
+                            bSM.LengthsOfStay.LengthOfStay[indexLS++].Time = lOS.Time;
+                        }
+                    }
 
                     if(aSM.RestricitionStatusNode != null)
                     {
