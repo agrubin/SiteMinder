@@ -5,6 +5,12 @@ using pmsXchange.pmsXchangeService;
 namespace pmsXchange
 {
     //
+    // SiteMinder WSDL file generated specifically for .NET clients:
+    //
+    // https://cmtpi.siteminder.com/pmsxchangev2/services/SPIORANGE/pmsxchange_flat.wsdl 
+    //
+
+    //
     // The async service connection implemeted as a class, creates a new connection very time it's instantiated. Use only for asynchronous calls.
     //
 
