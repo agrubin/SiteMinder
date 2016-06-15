@@ -25,7 +25,7 @@ namespace pmsXchange
             Opened_For_Sale,
             Closed_To_Arrival,
             Open_To_Arrival,
-            Closed_To_Deaprture,
+            Closed_To_Departure,
             Open_To_Departure
         }
         public enum ResStatus
@@ -236,7 +236,7 @@ namespace pmsXchange
                                 Status = "Open";
                                 break;
 
-                            case Restrictions.Closed_To_Deaprture:
+                            case Restrictions.Closed_To_Departure:
                                 Restriction = "Departure";
                                 Status = "Close";
                                 break;
@@ -368,10 +368,12 @@ namespace pmsXchange
                     }
 
                     BookingLimit = bookingLimit.ToString();
+
                     if (restrictions != Restrictions.None)
                     {
                         RestricitionStatusNode = new RestricitionStatus(restrictions);
                     }
+
                     StatusApplicationControlNode = statusApplicationControl;
                 }
             }
@@ -512,6 +514,27 @@ namespace pmsXchange
                     bSM.StatusApplicationControl.SunSpecified = true; 
 
                     bSM.BookingLimit = aSM.BookingLimit;
+
+                    if(aSM.RestricitionStatusNode != null)
+                    {
+                        bSM.RestrictionStatus = new AvailStatusMessageTypeRestrictionStatus();
+                        if (aSM.RestricitionStatusNode.Status == "Open")
+                        {
+                            bSM.RestrictionStatus.Status = AvailabilityStatusType.Open;
+                        }
+                        if (aSM.RestricitionStatusNode.Status == "Close")
+                        {
+                            bSM.RestrictionStatus.Status = AvailabilityStatusType.Close;
+                        }
+                        if (aSM.RestricitionStatusNode.Restriction == "Arrival")
+                        {
+                            bSM.RestrictionStatus.Restriction = RatePlanTypeRestrictionStatusRestriction.Arrival;
+                        }
+                        if (aSM.RestricitionStatusNode.Restriction == "Departure")
+                        {
+                            bSM.RestrictionStatus.Restriction = RatePlanTypeRestrictionStatusRestriction.Departure;
+                        }
+                    }
                     
                     body.AvailStatusMessages.AvailStatusMessage[index++] = bSM;
                 }
@@ -521,15 +544,22 @@ namespace pmsXchange
                 //
 
                 response = await service.HotelAvailNotifRQAsync(CreateSecurityHeader(usernameAuthenticate, passwordAuthenticate), body).ConfigureAwait(false);
+            }  
+            catch (NullReferenceException)
+            {
+                Exception exSetup = new Exception("OTA_HotelAvailNotifRQ arguments were not set up properly causing a null reference exception.");
+                response = new HotelAvailNotifRQResponse();
+                response.OTA_HotelAvailNotifRS = new MessageAcknowledgementType();
+                response.OTA_HotelAvailNotifRS.Items = new object[] { ProcessingException(exSetup) };
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 response = new HotelAvailNotifRQResponse();
                 response.OTA_HotelAvailNotifRS = new MessageAcknowledgementType();
                 response.OTA_HotelAvailNotifRS.Items = new object[] { ProcessingException(ex) };
             }
 
-            
+
             return response;
         }
 
