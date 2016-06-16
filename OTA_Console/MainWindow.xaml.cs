@@ -36,43 +36,62 @@ namespace OTA_Console
             InitializeComponent();
         }
 
+        private async void button_HotelAvailNotif_Click(object sender, RoutedEventArgs e)
+        {
+            WriteResponseLine(string.Format("Sending OTA_HotelAvailNotifRQ..."));
+
+            DateTime start = new DateTime(2016, 8, 15);
+            DateTime end = new DateTime(2016, 8, 18);
+            API.AvailStatusMessages.AvailStatusMessage.StatusApplicationControl statusApplicationControl
+                = new API.AvailStatusMessages.AvailStatusMessage.StatusApplicationControl(start, end, "S2S", "TR", new List<API.AvailStatusMessages.AvailStatusMessage.StatusApplicationControl.DestinationSystemCodes.DestinationSystemCode> { new API.AvailStatusMessages.AvailStatusMessage.StatusApplicationControl.DestinationSystemCodes.DestinationSystemCode("ATL") });
+            API.AvailStatusMessages.AvailStatusMessage availStatusMessage = new API.AvailStatusMessages.AvailStatusMessage(statusApplicationControl, API.Restrictions.Stop_Sold, 1, 30, null);
+
+            API.AvailStatusMessages availStatusMessages = new API.AvailStatusMessages(hotelCode, new List<API.AvailStatusMessages.AvailStatusMessage> { availStatusMessage });
+            HotelAvailNotifRQResponse availResponse = await API.OTA_HotelAvailNotifRQ(pmsID, username, password, availStatusMessages);
+
+
+            if (availResponse.OTA_HotelAvailNotifRS.Items[0].GetType() == typeof(SuccessType))
+            {
+                WriteResponseLine(string.Format("OTA_HotelAvailNotifRS success!"));
+            }
+            else
+            {
+                string timestamp = availResponse.OTA_HotelAvailNotifRS.TimeStamp.ToString();
+                ErrorsType errors = (ErrorsType)availResponse.OTA_HotelAvailNotifRS.Items[0];
+
+                foreach (var error in errors.Error)
+                {
+                    WriteResponseLine(string.Format("OTA_HotelAvailNotifRS error - Timestamp: {2},  Type: {0},  Value: {1}", error.Type, error.Value, timestamp));
+                }
+            }
+
+            WriteResponseLine(string.Format(""));
+
+        }
         private async void button_Ping_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
- 
-
-                DateTime start = new DateTime(2016, 8, 15);
-                DateTime end = new DateTime(2016, 8, 18);
-                API.AvailStatusMessages.AvailStatusMessage.StatusApplicationControl statusApplicationControl 
-                    = new API.AvailStatusMessages.AvailStatusMessage.StatusApplicationControl(start, end, "S2S", "TR", new List<API.AvailStatusMessages.AvailStatusMessage.StatusApplicationControl.DestinationSystemCodes.DestinationSystemCode> { new API.AvailStatusMessages.AvailStatusMessage.StatusApplicationControl.DestinationSystemCodes.DestinationSystemCode( "ATL") });
-                API.AvailStatusMessages.AvailStatusMessage availStatusMessage = new API.AvailStatusMessages.AvailStatusMessage(statusApplicationControl, API.Restrictions.Stop_Sold, 1, 30, null);
-
-                API.AvailStatusMessages availStatusMessages = new API.AvailStatusMessages(hotelCode, new List<API.AvailStatusMessages.AvailStatusMessage> { availStatusMessage });
-                HotelAvailNotifRQResponse availResponse = await API.OTA_HotelAvailNotifRQ(pmsID, username, password, availStatusMessages);
-            }
-            catch(Exception ex)
-            {
-            }
-
-            return;
-
+            WriteResponseLine(string.Format("Sending OTA_PingRQ..."));
             textBlock_Ping.Text = "Sending...";
             PingRQResponse pingResponse = await API.OTA_PingRQ(username, password);
             if (pingResponse.OTA_PingRS.Items[0].GetType() == typeof(SuccessType))
             {
                 textBlock_Ping.Text = pingResponse.OTA_PingRS.Items[1].ToString();
+                WriteResponseLine(string.Format("OTA_PingRS success!"));
             }
             else
             {
                 string timestamp = pingResponse.OTA_PingRS.TimeStamp.ToString();
                 ErrorsType errors = (ErrorsType)pingResponse.OTA_PingRS.Items[0];
+
                 foreach (var error in errors.Error)
                 {
                     textBlock_Ping.Text = "Error";
                     WriteResponseLine(string.Format("OTA_PingRS error - Timestamp: {2},  Type: {0},  Value: {1}", error.Type, error.Value, timestamp));
                 }
             }
+
+            WriteResponseLine(string.Format(""));
+
         }
 
         private void WriteResponseLine(string responseLine)
@@ -91,6 +110,7 @@ namespace OTA_Console
 
         private async void button_Read_Click(object sender, RoutedEventArgs e)
         {
+            WriteResponseLine(string.Format("Sending OTA_ResRetrieveRQ..."));
             button_NotifReport.IsEnabled = false;
 
             API.ResStatus resStatus = API.ResStatus.All;
@@ -102,7 +122,7 @@ namespace OTA_Console
 
             if (reservationsResponse.OTA_ResRetrieveRS.Items[0].GetType() == typeof(SuccessType))
             {
-                WriteResponseLine(string.Format("OTA_ResRetrieveRS success..."));
+                WriteResponseLine(string.Format("OTA_ResRetrieveRS success!"));
 
                 if (reservationsResponse.OTA_ResRetrieveRS.Items.Length > 1)
                 {
@@ -142,15 +162,21 @@ namespace OTA_Console
             {
                 string timestamp = reservationsResponse.OTA_ResRetrieveRS.TimeStamp.ToString();
                 ErrorsType errors = (ErrorsType)reservationsResponse.OTA_ResRetrieveRS.Items[0];
+
                 foreach (var error in errors.Error)
                 {
                     WriteResponseLine(string.Format("OTA_ResRetrieveRS error - Timestamp: {2},  Type: {0},  Value: {1}", error.Type, error.Value, timestamp));
                 }
             }
+
+            WriteResponseLine(string.Format(""));
+
         }
 
         private async void button_NotifReport_Click(object sender, RoutedEventArgs e)
         {
+            WriteResponseLine(string.Format("Sending OTA_NotifReportRQ..."));
+
             foreach (HotelReservationType hotelReservation in reservationList.Items)
             {
                 //
@@ -204,12 +230,16 @@ namespace OTA_Console
 
                     string timestamp = confirmResponse.OTA_NotifReportRS.TimeStamp.ToString();
                     ErrorsType errors = (ErrorsType)confirmResponse.OTA_NotifReportRS.Items[0];
+
                     foreach (var error in errors.Error)
                     {
                         WriteResponseLine(string.Format("OTA_NotifReportRS error - Timestamp: {2},  Type: {0},  Value: {1}", error.Type, error.Value, timestamp));
                     }
                 }
             }
+
+            WriteResponseLine(string.Format(""));
+
         }
 
         private void comboBox_OTA_EWT_Loaded(object sender, RoutedEventArgs e)
