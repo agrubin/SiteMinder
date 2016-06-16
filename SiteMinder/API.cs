@@ -191,14 +191,34 @@ namespace pmsXchange
                         }
                     }
                 }
+
+                public sealed class Rates
+                {
+                    public sealed class Rate
+                    {
+
+                    }
+
+                    public List<Rate> RateNodeList { get; private set; }
+                }
+
                 public StatusApplicationControl StatusApplicationControlNode { get; private set; }
 
-                public RateAmountMessage(StatusApplicationControl statusApplicationControl)
+                public Rates RatesNode { get; private set; }
+                public RateAmountMessage(StatusApplicationControl statusApplicationControl, Rates rates)
                 {
                     if (statusApplicationControl == null)
                     {
                         throw new Exception("RateAmountMessage: StatusApplicationControl argument may not be null.");
                     }
+
+                    if(rates == null)
+                    {
+                        throw new Exception("RateAmountMessage: rates argument may not be null.");
+                    }
+
+                    StatusApplicationControlNode = statusApplicationControl;
+                    RatesNode = rates;
                 }
             }
 
@@ -504,6 +524,13 @@ namespace pmsXchange
                 body.NotifDetails.HotelNotifReport.Item = hotelReservations;
                 response = await service.NotifReportRQAsync(CreateSecurityHeader(usernameAuthenticate, passwordAuthenticate), body).ConfigureAwait(false);
             }
+            catch (NullReferenceException)
+            {
+                Exception exSetup = new Exception("OTA_NotifReportRQ arguments were not set up properly causing a null reference exception.");
+                response = new NotifReportRQResponse();
+                response.OTA_NotifReportRS = new MessageAcknowledgementType();
+                response.OTA_NotifReportRS.Items = new object[] { ProcessingException(exSetup) };
+            }
             catch (Exception ex)
             {
                 response = new NotifReportRQResponse();
@@ -514,15 +541,48 @@ namespace pmsXchange
             return response;
         }
 
+        static public async Task<HotelRateAmountNotifRQResponse> OTA_HotelRateAmountNotifRQ(string pmsID, string usernameAuthenticate, string passwordAuthenticate, RateAmountMessages rateAmountMessages)
+        {
+            HotelRateAmountNotifRQResponse response = null;
+
+            try
+            {
+                PmsXchangeServiceClient service = new AsyncServiceConnection().service;
+                OTA_HotelRateAmountNotifRQ body = new OTA_HotelRateAmountNotifRQ() { Version = 1.0M, EchoToken = Guid.NewGuid().ToString() /* Echo token must be unique.*/, TimeStamp = DateTime.Now, TimeStampSpecified = true, POS = CreatePOS(pmsID), RateAmountMessages = new OTA_HotelRateAmountNotifRQRateAmountMessages() };
+                body.RateAmountMessages.HotelCode = rateAmountMessages.HotelCode;
+                body.RateAmountMessages.RateAmountMessage = new RateAmountMessageType[rateAmountMessages.RateAmountMessageNodeList.Count];
+
+                int index = 0;
+
+                foreach (RateAmountMessages.RateAmountMessage rAM in rateAmountMessages.RateAmountMessageNodeList)
+                {
+                }
+            }
+            catch (NullReferenceException)
+            {
+                Exception exSetup = new Exception("OTA_HotelRateAmountNotifRQ arguments were not set up properly causing a null reference exception.");
+                response = new HotelRateAmountNotifRQResponse();
+                response.OTA_HotelRateAmountNotifRS = new MessageAcknowledgementType();
+                response.OTA_HotelRateAmountNotifRS.Items = new object[] { ProcessingException(exSetup) };
+            }
+            catch (Exception ex)
+            {
+                response = new HotelRateAmountNotifRQResponse();
+                response.OTA_HotelRateAmountNotifRS = new MessageAcknowledgementType();
+                response.OTA_HotelRateAmountNotifRS.Items = new object[] { ProcessingException(ex) };
+            }
+
+            return response;
+        }
         static public async Task<HotelAvailNotifRQResponse> OTA_HotelAvailNotifRQ(string pmsID, string usernameAuthenticate, string passwordAuthenticate, AvailStatusMessages availStatusMessages)
         {
             HotelAvailNotifRQResponse response = null;
 
-            PmsXchangeServiceClient service = new AsyncServiceConnection().service;
-
             try
             {
-                OTA_HotelAvailNotifRQ body = new OTA_HotelAvailNotifRQ() { Version = 1.0M, EchoToken = Guid.NewGuid().ToString() /* Echo token must be unique.            */, TimeStamp = DateTime.Now, TimeStampSpecified = true, POS = CreatePOS(pmsID), AvailStatusMessages = new OTA_HotelAvailNotifRQAvailStatusMessages() };
+                PmsXchangeServiceClient service = new AsyncServiceConnection().service;
+
+                OTA_HotelAvailNotifRQ body = new OTA_HotelAvailNotifRQ() { Version = 1.0M, EchoToken = Guid.NewGuid().ToString() /* Echo token must be unique.*/, TimeStamp = DateTime.Now, TimeStampSpecified = true, POS = CreatePOS(pmsID), AvailStatusMessages = new OTA_HotelAvailNotifRQAvailStatusMessages() };
                 body.AvailStatusMessages.HotelCode = availStatusMessages.HotelCode;
                 body.AvailStatusMessages.AvailStatusMessage = new AvailStatusMessageType[availStatusMessages.AvailStatusMessageNodeList.Count];
 
@@ -672,6 +732,13 @@ namespace pmsXchange
                 //
 
                 response = await service.ReadRQAsync(CreateSecurityHeader(usernameAuthenticate, passwordAuthenticate), body).ConfigureAwait(false);
+            }
+            catch (NullReferenceException)
+            {
+                Exception exSetup = new Exception("OTA_NotifReportRQ arguments were not set up properly causing a null reference exception.");
+                response = new ReadRQResponse();
+                response.OTA_ResRetrieveRS = new OTA_ResRetrieveRS();
+                response.OTA_ResRetrieveRS.Items = new object[] { ProcessingException(exSetup) };
             }
             catch (Exception ex)
             {
