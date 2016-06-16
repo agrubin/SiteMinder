@@ -157,7 +157,12 @@ namespace pmsXchange
                     {
                         public sealed class DestinationSystemCode
                         {
-                            public string innerText { get; private set; }
+                            public string InnerText { get; private set; }
+
+                            public DestinationSystemCode(string innerText)
+                            {
+                                InnerText = innerText;
+                            }
                         }
 
                         public List<DestinationSystemCode> DestinationSystemCodeNodeList { get; private set; }
@@ -331,7 +336,7 @@ namespace pmsXchange
                 // Set availability by specifing the booking limit.
                 //
 
-                public AvailStatusMessage(StatusApplicationControl statusApplicationControl, Restrictions restrictions, int? minTime = null, int? maxTime = null, int? bookingLimit = null)
+                public AvailStatusMessage(StatusApplicationControl statusApplicationControl, Restrictions restrictions, int? minTime, int? maxTime, int? bookingLimit)
                 {
                     if(statusApplicationControl == null)
                     {
@@ -507,6 +512,19 @@ namespace pmsXchange
                         }
                     }
 
+                    if(aSM.StatusApplicationControlNode.DestinationSystemCodesNode != null)
+                    {
+                        bSM.StatusApplicationControl.DestinationSystemCodes = new DestinationSystemCodesTypeDestinationSystemCode[aSM.StatusApplicationControlNode.DestinationSystemCodesNode.DestinationSystemCodeNodeList.Count];
+
+                        int indexDC = 0;
+
+                        foreach(var dC in aSM.StatusApplicationControlNode.DestinationSystemCodesNode.DestinationSystemCodeNodeList)
+                        {
+                            bSM.StatusApplicationControl.DestinationSystemCodes[indexDC] = new DestinationSystemCodesTypeDestinationSystemCode();
+                            bSM.StatusApplicationControl.DestinationSystemCodes[indexDC++].Value = dC.InnerText;
+                        }
+                    }
+
                     if(aSM.RestricitionStatusNode != null)
                     {
                         bSM.RestrictionStatus = new AvailStatusMessageTypeRestrictionStatus();
@@ -535,6 +553,7 @@ namespace pmsXchange
                     
                     body.AvailStatusMessages.AvailStatusMessage[index++] = bSM;
                 }
+
 
                 //
                 // Send availability update.

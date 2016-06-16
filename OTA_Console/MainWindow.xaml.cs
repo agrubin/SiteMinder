@@ -44,8 +44,9 @@ namespace OTA_Console
 
                 DateTime start = new DateTime(2016, 8, 15);
                 DateTime end = new DateTime(2016, 8, 18);
-                API.AvailStatusMessages.AvailStatusMessage.StatusApplicationControl statusApplicationControl = new API.AvailStatusMessages.AvailStatusMessage.StatusApplicationControl(start, end, "S2S", "TR", null);
-                API.AvailStatusMessages.AvailStatusMessage availStatusMessage = new API.AvailStatusMessages.AvailStatusMessage(statusApplicationControl, API.Restrictions.Stop_Sold, 1, 30, 20);
+                API.AvailStatusMessages.AvailStatusMessage.StatusApplicationControl statusApplicationControl 
+                    = new API.AvailStatusMessages.AvailStatusMessage.StatusApplicationControl(start, end, "S2S", "TR", new List<API.AvailStatusMessages.AvailStatusMessage.StatusApplicationControl.DestinationSystemCodes.DestinationSystemCode> { new API.AvailStatusMessages.AvailStatusMessage.StatusApplicationControl.DestinationSystemCodes.DestinationSystemCode( "ATL") });
+                API.AvailStatusMessages.AvailStatusMessage availStatusMessage = new API.AvailStatusMessages.AvailStatusMessage(statusApplicationControl, API.Restrictions.Stop_Sold, 1, 30, null);
 
                 API.AvailStatusMessages availStatusMessages = new API.AvailStatusMessages(hotelCode, new List<API.AvailStatusMessages.AvailStatusMessage> { availStatusMessage });
                 HotelAvailNotifRQResponse availResponse = await API.OTA_HotelAvailNotifRQ(pmsID, username, password, availStatusMessages);
