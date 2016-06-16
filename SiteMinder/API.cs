@@ -147,6 +147,70 @@ namespace pmsXchange
                 errorText = xmlText.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
             }
         }
+
+        public sealed class RateAmountMessages
+        {
+            public sealed class RateAmountMessage
+            {
+                public sealed class StatusApplicationControl
+                {
+                    public sealed class DestinationSystemCodes
+                    {
+                        public sealed class DestinationSystemCode
+                        {
+                            public string InnerText { get; private set; }
+
+                            public DestinationSystemCode(string innerText)
+                            {
+                                InnerText = innerText;
+                            }
+                        }
+
+                        public List<DestinationSystemCode> DestinationSystemCodeNodeList { get; private set; }
+
+                        public DestinationSystemCodes(List<DestinationSystemCode> destinationSystemCodeNodeList)
+                        {
+                            DestinationSystemCodeNodeList = destinationSystemCodeNodeList;
+                        }
+                    }
+
+                    public string RatePlanCode { get; private set; }
+                    public string InvTypeCode { get; private set; }
+                    public DestinationSystemCodes DestinationSystemCodesNode { get; private set; }
+
+                    public StatusApplicationControl(string ratePlanCode,
+                                                    string invTypeCode,
+                                                    List<DestinationSystemCodes.DestinationSystemCode> destinationSystemCodeList)
+                    {
+                        RatePlanCode = ratePlanCode;
+                        InvTypeCode = invTypeCode;
+
+                        if (destinationSystemCodeList != null)
+                        {
+                            DestinationSystemCodesNode = new DestinationSystemCodes(destinationSystemCodeList);
+                        }
+                    }
+                }
+                public StatusApplicationControl StatusApplicationControlNode { get; private set; }
+
+                public RateAmountMessage(StatusApplicationControl statusApplicationControl)
+                {
+                    if (statusApplicationControl == null)
+                    {
+                        throw new Exception("RateAmountMessage: StatusApplicationControl argument may not be null.");
+                    }
+                }
+            }
+
+            public string HotelCode { get; private set; }
+            public List<RateAmountMessage> RateAmountMessageNodeList { get; private set; }
+
+            public RateAmountMessages(string hotelCode, List<RateAmountMessage> rateAmountMessageList)
+            {
+                HotelCode = hotelCode;
+                RateAmountMessageNodeList = rateAmountMessageList;
+            }
+        }
         public sealed class AvailStatusMessages
         {
             public sealed class AvailStatusMessage

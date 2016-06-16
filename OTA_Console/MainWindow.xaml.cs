@@ -19,6 +19,11 @@ using System.Windows.Shapes;
 using pmsXchange;
 using pmsXchange.pmsXchangeService;
 
+using static pmsXchange.API;
+using static pmsXchange.API.AvailStatusMessages;
+
+
+
 namespace OTA_Console
 {
     /// <summary>
@@ -42,12 +47,12 @@ namespace OTA_Console
 
             DateTime start = new DateTime(2016, 8, 15);
             DateTime end = new DateTime(2016, 8, 18);
-            API.AvailStatusMessages.AvailStatusMessage.StatusApplicationControl statusApplicationControl
-                = new API.AvailStatusMessages.AvailStatusMessage.StatusApplicationControl(start, end, "S2S", "TR", new List<API.AvailStatusMessages.AvailStatusMessage.StatusApplicationControl.DestinationSystemCodes.DestinationSystemCode> { new API.AvailStatusMessages.AvailStatusMessage.StatusApplicationControl.DestinationSystemCodes.DestinationSystemCode("ATL") });
-            API.AvailStatusMessages.AvailStatusMessage availStatusMessage = new API.AvailStatusMessages.AvailStatusMessage(statusApplicationControl, API.Restrictions.Stop_Sold, 1, 30, null);
+            AvailStatusMessage.StatusApplicationControl statusApplicationControl
+                = new AvailStatusMessage.StatusApplicationControl(start, end, "S2S", "TR", new List<AvailStatusMessage.StatusApplicationControl.DestinationSystemCodes.DestinationSystemCode> { new AvailStatusMessage.StatusApplicationControl.DestinationSystemCodes.DestinationSystemCode("ATL") });
+            AvailStatusMessage availStatusMessage = new AvailStatusMessage(statusApplicationControl, Restrictions.Stop_Sold, 1, 30, null);
+            AvailStatusMessages availStatusMessages = new AvailStatusMessages(hotelCode, new List<AvailStatusMessage> { availStatusMessage });
 
-            API.AvailStatusMessages availStatusMessages = new API.AvailStatusMessages(hotelCode, new List<API.AvailStatusMessages.AvailStatusMessage> { availStatusMessage });
-            HotelAvailNotifRQResponse availResponse = await API.OTA_HotelAvailNotifRQ(pmsID, username, password, availStatusMessages);
+            HotelAvailNotifRQResponse availResponse = await OTA_HotelAvailNotifRQ(pmsID, username, password, availStatusMessages);
 
 
             if (availResponse.OTA_HotelAvailNotifRS.Items[0].GetType() == typeof(SuccessType))
@@ -72,7 +77,7 @@ namespace OTA_Console
         {
             WriteResponseLine(string.Format("Sending OTA_PingRQ..."));
             textBlock_Ping.Text = "Sending...";
-            PingRQResponse pingResponse = await API.OTA_PingRQ(username, password);
+            PingRQResponse pingResponse = await OTA_PingRQ(username, password);
             if (pingResponse.OTA_PingRS.Items[0].GetType() == typeof(SuccessType))
             {
                 textBlock_Ping.Text = pingResponse.OTA_PingRS.Items[1].ToString();
@@ -113,12 +118,12 @@ namespace OTA_Console
             WriteResponseLine(string.Format("Sending OTA_ResRetrieveRQ..."));
             button_NotifReport.IsEnabled = false;
 
-            API.ResStatus resStatus = API.ResStatus.All;
-            if (radioButton_Modify.IsChecked == true) resStatus = API.ResStatus.Modify;
-            if (radioButton_Cancel.IsChecked == true) resStatus = API.ResStatus.Cancel;
-            if (radioButton_Book.IsChecked == true) resStatus = API.ResStatus.Book;
+            ResStatus resStatus = ResStatus.All;
+            if (radioButton_Modify.IsChecked == true) resStatus = ResStatus.Modify;
+            if (radioButton_Cancel.IsChecked == true) resStatus = ResStatus.Cancel;
+            if (radioButton_Book.IsChecked == true) resStatus = ResStatus.Book;
 
-            ReadRQResponse reservationsResponse = await API.OTA_ReadRQ(pmsID, username, password, hotelCode, resStatus);
+            ReadRQResponse reservationsResponse = await OTA_ReadRQ(pmsID, username, password, hotelCode, resStatus);
 
             if (reservationsResponse.OTA_ResRetrieveRS.Items[0].GetType() == typeof(SuccessType))
             {
@@ -201,12 +206,12 @@ namespace OTA_Console
 
                 if (checkBox_Conf_Errror.IsChecked == false)
                 {
-                    confirmResponse = await API.OTA_NotifReportRQ(username, password, null, resStatusText, dateTimeStamp, msgID, resIDPMS);
+                    confirmResponse = await OTA_NotifReportRQ(username, password, null, resStatusText, dateTimeStamp, msgID, resIDPMS);
                 }
                 else
                 {
-                    API.ReservationError resError = new API.ReservationError((API.OTA_EWT)comboBox_OTA_EWT.SelectedValue, (API.OTA_ERR)comboBox_OTA_ERR.SelectedValue, null);
-                    confirmResponse = await API.OTA_NotifReportRQ(username, password, null, resStatusText, dateTimeStamp, msgID, resIDPMS);
+                    ReservationError resError = new ReservationError((OTA_EWT)comboBox_OTA_EWT.SelectedValue, (OTA_ERR)comboBox_OTA_ERR.SelectedValue, null);
+                    confirmResponse = await OTA_NotifReportRQ(username, password, null, resStatusText, dateTimeStamp, msgID, resIDPMS);
                 }
 
                 //
@@ -244,13 +249,13 @@ namespace OTA_Console
 
         private void comboBox_OTA_EWT_Loaded(object sender, RoutedEventArgs e)
         {
-            comboBox_OTA_EWT.ItemsSource = Enum.GetValues(typeof(API.OTA_EWT));
+            comboBox_OTA_EWT.ItemsSource = Enum.GetValues(typeof(OTA_EWT));
             comboBox_OTA_EWT.SelectedIndex = 0;
         }
 
         private void comboBox_OTA_ERR_Loaded(object sender, RoutedEventArgs e)
         {
-            comboBox_OTA_ERR.ItemsSource = Enum.GetValues(typeof(API.OTA_ERR));
+            comboBox_OTA_ERR.ItemsSource = Enum.GetValues(typeof(OTA_ERR));
             comboBox_OTA_ERR.SelectedIndex = 0;
         }
     }
