@@ -21,6 +21,7 @@ using pmsXchange.pmsXchangeService;
 
 using static pmsXchange.API;
 using static pmsXchange.API.AvailStatusMessages;
+using static pmsXchange.API.RateAmountMessages;
 
 
 
@@ -41,6 +42,30 @@ namespace OTA_Console
             InitializeComponent();
         }
 
+        private async void button_HotelRateAmountNotif_Click(object sender, RoutedEventArgs e)
+        {
+            RateAmountMessage.StatusApplicationControl statusApplicationControl
+                = new RateAmountMessage.StatusApplicationControl(null, null, null);
+
+            //
+            // Set up one or more RateAmountMessage.
+            //
+
+            List<RateAmountMessage> rateAmountMessageList = new List<RateAmountMessage>();
+
+            #region RateAmountMessage setup
+
+            RateAmountMessage.Rates rates = new RateAmountMessage.Rates();
+            RateAmountMessage rateAmountMessage = new RateAmountMessage(statusApplicationControl, rates);
+            rateAmountMessageList.Add(rateAmountMessage); 
+
+            #endregion
+
+            RateAmountMessages rateAmountMessages = new RateAmountMessages(hotelCode, rateAmountMessageList );
+
+            HotelRateAmountNotifRQResponse availResponse = await OTA_HotelRateAmountNotifRQ(pmsID, username, password, rateAmountMessages);
+        }
+
         private async void button_HotelAvailNotif_Click(object sender, RoutedEventArgs e)
         {
             WriteResponseLine(string.Format("Sending OTA_HotelAvailNotifRQ..."));
@@ -49,8 +74,21 @@ namespace OTA_Console
             DateTime end = new DateTime(2016, 8, 18);
             AvailStatusMessage.StatusApplicationControl statusApplicationControl
                 = new AvailStatusMessage.StatusApplicationControl(start, end, "S2S", "TR", new List<AvailStatusMessage.StatusApplicationControl.DestinationSystemCodes.DestinationSystemCode> { new AvailStatusMessage.StatusApplicationControl.DestinationSystemCodes.DestinationSystemCode("ATL") });
+
+            //
+            // Set up one or more AvailStatusMessage.
+            //
+
+            List<AvailStatusMessage> availStatusMessageList = new List<AvailStatusMessage>();
+
+            #region AvailStatusMessage setup
+
             AvailStatusMessage availStatusMessage = new AvailStatusMessage(statusApplicationControl, Restrictions.Stop_Sold, 1, 30, null);
-            AvailStatusMessages availStatusMessages = new AvailStatusMessages(hotelCode, new List<AvailStatusMessage> { availStatusMessage });
+            availStatusMessageList.Add(availStatusMessage); 
+
+            #endregion
+
+            AvailStatusMessages availStatusMessages = new AvailStatusMessages(hotelCode, availStatusMessageList);
 
             HotelAvailNotifRQResponse availResponse = await OTA_HotelAvailNotifRQ(pmsID, username, password, availStatusMessages);
 

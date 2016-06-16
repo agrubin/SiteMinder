@@ -678,7 +678,6 @@ namespace pmsXchange
                     body.AvailStatusMessages.AvailStatusMessage[index++] = bSM;
                 }
 
-
                 //
                 // Send availability update.
                 //

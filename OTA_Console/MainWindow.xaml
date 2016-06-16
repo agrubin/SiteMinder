@@ -41,7 +41,8 @@
         <ComboBox x:Name="comboBox_OTA_ERR" Grid.Column="1" HorizontalAlignment="Left" Margin="182.6,164,0,0" VerticalAlignment="Top" Width="275" Loaded="comboBox_OTA_ERR_Loaded" IsEnabled="{Binding IsEnabled, ElementName=button_NotifReport}"/>
         <TextBlock x:Name="textBlock_Response_Copy1" HorizontalAlignment="Left" Margin="182.6,148,0,0" TextWrapping="Wrap" Text="OTA_ERR Error Code" VerticalAlignment="Top" Grid.Column="1" Height="16" Width="135"/>
         <CheckBox x:Name="checkBox_Conf_Errror" Content="Send Confirmation Error" HorizontalAlignment="Left" Margin="22,148,0,0" VerticalAlignment="Top" Width="153" Grid.ColumnSpan="2" IsEnabled="{Binding IsEnabled, ElementName=button_NotifReport}"/>
-        <Button x:Name="button_HotelAvailNotifRQ" Content="OTA__HotelAvailNotifRQ" HorizontalAlignment="Left" Margin="22,205,0,0" VerticalAlignment="Top" Width="133" Click="button_HotelAvailNotif_Click" Height="23" Grid.ColumnSpan="2"/>
+        <Button x:Name="button_HotelAvailNotifRQ" Content="OTA__HotelAvailNotifRQ" HorizontalAlignment="Left" Margin="22,199,0,0" VerticalAlignment="Top" Width="193" Click="button_HotelAvailNotif_Click" Height="23" Grid.ColumnSpan="2"/>
+        <Button x:Name="button_HotelRateAmountNotifRQ" Content="OTA__HotelRateAmountNotifRQ" HorizontalAlignment="Left" Margin="22,238,0,0" VerticalAlignment="Top" Width="193" Click="button_HotelRateAmountNotif_Click" Height="23" Grid.ColumnSpan="2" RenderTransformOrigin="0.546,1.965"/>
 
     </Grid>
 </Window>
