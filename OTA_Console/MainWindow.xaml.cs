@@ -51,13 +51,23 @@ namespace OTA_Console
             // Set up one or more RateAmountMessage.
             //
 
+
+            #region RateAmountMessages setup
+
             List<RateAmountMessage> rateAmountMessageList = new List<RateAmountMessage>();
 
-            #region RateAmountMessage setup
+                #region Rates setup
 
-            RateAmountMessage.Rates rates = new RateAmountMessage.Rates();
+                List<RateAmountMessage.Rates.Rate> rateNodeList = new List<RateAmountMessage.Rates.Rate>();
+
+                RateAmountMessage.Rates.Rate rate = new RateAmountMessage.Rates.Rate(null, null, null, null);
+                rateNodeList.Add(rate); // Add a Rate to Rates.
+
+                #endregion
+
+            RateAmountMessage.Rates rates = new RateAmountMessage.Rates(rateNodeList);
             RateAmountMessage rateAmountMessage = new RateAmountMessage(statusApplicationControl, rates);
-            rateAmountMessageList.Add(rateAmountMessage); 
+            rateAmountMessageList.Add(rateAmountMessage); // Add a RateAmountMessage to RateAmountMessages.
 
             #endregion
 
@@ -79,12 +89,13 @@ namespace OTA_Console
             // Set up one or more AvailStatusMessage.
             //
 
+
+            #region AvailStatusMessages setup
+
             List<AvailStatusMessage> availStatusMessageList = new List<AvailStatusMessage>();
 
-            #region AvailStatusMessage setup
-
             AvailStatusMessage availStatusMessage = new AvailStatusMessage(statusApplicationControl, Restrictions.Stop_Sold, 1, 30, null);
-            availStatusMessageList.Add(availStatusMessage); 
+            availStatusMessageList.Add(availStatusMessage); // Add an AvailStatusMessage to AvailStatusMessages.
 
             #endregion
 

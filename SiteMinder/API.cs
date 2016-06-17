@@ -196,10 +196,37 @@ namespace pmsXchange
                 {
                     public sealed class Rate
                     {
+                        public string RateDescription { get; private set; }
+                        public string BaseByGuestAmts_BeforeTax { get; private set; }
+                        public string BaseByGuestAmts_AfterTax { get; private set; }
+                        public string CurrencyCode { get; private set; }
+                        public Rate(string currencyCode, string baseByGuestAmts_BeforeTax, string baseByGuestAmts_AfterTax, string rateDescription)
+                        {
+                            if(rateDescription != null)
+                            {
+                                if(rateDescription.Length > 255)
+                                {
+                                    throw new Exception("Rate: rateDescription may not be greater than 255 characters in length.");
+                                }
+                            }
 
+                            if ((baseByGuestAmts_BeforeTax != null || baseByGuestAmts_AfterTax != null) && currencyCode == null)
+                            {
+                                throw new Exception("Rate: currencyCode must be specified with baseByGuestAmts.");
+                            }
+
+                            RateDescription = rateDescription;
+                            BaseByGuestAmts_BeforeTax = baseByGuestAmts_BeforeTax;
+                            BaseByGuestAmts_AfterTax = baseByGuestAmts_AfterTax;
+                        }
                     }
 
                     public List<Rate> RateNodeList { get; private set; }
+
+                    public Rates(List<Rate> rateNodeList)
+                    {
+                        RateNodeList = rateNodeList;
+                    }
                 }
 
                 public StatusApplicationControl StatusApplicationControlNode { get; private set; }
