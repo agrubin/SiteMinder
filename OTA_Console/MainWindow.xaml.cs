@@ -79,6 +79,24 @@ namespace OTA_Console
             HotelRateAmountNotifRQResponse availResponse = await OTA_HotelRateAmountNotifRQ(pmsID, username, password, rateAmountMessages);
         }
 
+        private List<AvailStatusMessage.StatusApplicationControl.DestinationSystemCodes.DestinationSystemCode> GetAvailDestList(params string[] dests)
+        {
+            if(dests.Count() == 0)
+            {
+                return null;
+            }
+
+            List<AvailStatusMessage.StatusApplicationControl.DestinationSystemCodes.DestinationSystemCode> availDestList
+                = new List<AvailStatusMessage.StatusApplicationControl.DestinationSystemCodes.DestinationSystemCode>();
+
+            foreach(string dest in dests)
+            {
+                availDestList.Add(new AvailStatusMessage.StatusApplicationControl.DestinationSystemCodes.DestinationSystemCode(dest));
+            }
+
+            return availDestList;
+        }
+
         private async void button_HotelAvailNotif_Click(object sender, RoutedEventArgs e)
         {
             WriteResponseLine(string.Format("Sending OTA_HotelAvailNotifRQ..."));
@@ -96,7 +114,7 @@ namespace OTA_Console
             DateTime start = new DateTime(2016, 8, 15);
             DateTime end = new DateTime(2016, 8, 18);
             AvailStatusMessage.StatusApplicationControl statusApplicationControl
-                = new AvailStatusMessage.StatusApplicationControl(start, end, "S2S", "TR", new List<AvailStatusMessage.StatusApplicationControl.DestinationSystemCodes.DestinationSystemCode> { new AvailStatusMessage.StatusApplicationControl.DestinationSystemCodes.DestinationSystemCode("ATL") });
+                = new AvailStatusMessage.StatusApplicationControl(start, end, "S2S", "TR", GetAvailDestList("NYU", "ATL"));
             AvailStatusMessage availStatusMessage = new AvailStatusMessage(statusApplicationControl, Restrictions.Stop_Sold, 1, 30, null);
             availStatusMessageList.Add(availStatusMessage); // Add an AvailStatusMessage to AvailStatusMessages.
 
