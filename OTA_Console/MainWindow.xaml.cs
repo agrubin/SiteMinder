@@ -44,13 +44,11 @@ namespace OTA_Console
 
         private async void button_HotelRateAmountNotif_Click(object sender, RoutedEventArgs e)
         {
-            RateAmountMessage.StatusApplicationControl statusApplicationControl
-                = new RateAmountMessage.StatusApplicationControl(null, null, null);
+
 
             //
             // Set up one or more RateAmountMessage.
             //
-
 
             #region RateAmountMessages setup
 
@@ -60,18 +58,23 @@ namespace OTA_Console
 
                 List<RateAmountMessage.Rates.Rate> rateNodeList = new List<RateAmountMessage.Rates.Rate>();
 
-                RateAmountMessage.Rates.Rate rate = new RateAmountMessage.Rates.Rate(null, null, null, null);
+                DateTime start = new DateTime(2016, 8, 15);
+                DateTime end = new DateTime(2016, 8, 18);
+                RateAmountMessage.Rates.Rate rate = new RateAmountMessage.Rates.Rate(start, end, "AUD", null, null, null);
                 rateNodeList.Add(rate); // Add a Rate to Rates.
+
+                RateAmountMessage.Rates rates = new RateAmountMessage.Rates(rateNodeList);
 
                 #endregion
 
-            RateAmountMessage.Rates rates = new RateAmountMessage.Rates(rateNodeList);
+            RateAmountMessage.StatusApplicationControl statusApplicationControl = new RateAmountMessage.StatusApplicationControl(null, null, null);
             RateAmountMessage rateAmountMessage = new RateAmountMessage(statusApplicationControl, rates);
             rateAmountMessageList.Add(rateAmountMessage); // Add a RateAmountMessage to RateAmountMessages.
 
+            RateAmountMessages rateAmountMessages = new RateAmountMessages(hotelCode, rateAmountMessageList );
+
             #endregion
 
-            RateAmountMessages rateAmountMessages = new RateAmountMessages(hotelCode, rateAmountMessageList );
 
             HotelRateAmountNotifRQResponse availResponse = await OTA_HotelRateAmountNotifRQ(pmsID, username, password, rateAmountMessages);
         }
@@ -80,26 +83,27 @@ namespace OTA_Console
         {
             WriteResponseLine(string.Format("Sending OTA_HotelAvailNotifRQ..."));
 
-            DateTime start = new DateTime(2016, 8, 15);
-            DateTime end = new DateTime(2016, 8, 18);
-            AvailStatusMessage.StatusApplicationControl statusApplicationControl
-                = new AvailStatusMessage.StatusApplicationControl(start, end, "S2S", "TR", new List<AvailStatusMessage.StatusApplicationControl.DestinationSystemCodes.DestinationSystemCode> { new AvailStatusMessage.StatusApplicationControl.DestinationSystemCodes.DestinationSystemCode("ATL") });
-
-            //
-            // Set up one or more AvailStatusMessage.
-            //
-
+  
 
             #region AvailStatusMessages setup
 
             List<AvailStatusMessage> availStatusMessageList = new List<AvailStatusMessage>();
 
+            //
+            // Set up one or more AvailStatusMessage.
+            //
+
+            DateTime start = new DateTime(2016, 8, 15);
+            DateTime end = new DateTime(2016, 8, 18);
+            AvailStatusMessage.StatusApplicationControl statusApplicationControl
+                = new AvailStatusMessage.StatusApplicationControl(start, end, "S2S", "TR", new List<AvailStatusMessage.StatusApplicationControl.DestinationSystemCodes.DestinationSystemCode> { new AvailStatusMessage.StatusApplicationControl.DestinationSystemCodes.DestinationSystemCode("ATL") });
             AvailStatusMessage availStatusMessage = new AvailStatusMessage(statusApplicationControl, Restrictions.Stop_Sold, 1, 30, null);
             availStatusMessageList.Add(availStatusMessage); // Add an AvailStatusMessage to AvailStatusMessages.
 
+            AvailStatusMessages availStatusMessages = new AvailStatusMessages(hotelCode, availStatusMessageList);
+
             #endregion
 
-            AvailStatusMessages availStatusMessages = new AvailStatusMessages(hotelCode, availStatusMessageList);
 
             HotelAvailNotifRQResponse availResponse = await OTA_HotelAvailNotifRQ(pmsID, username, password, availStatusMessages);
 

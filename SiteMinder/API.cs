@@ -196,13 +196,43 @@ namespace pmsXchange
                 {
                     public sealed class Rate
                     {
+                        public string Start { get; private set; }
+                        public string End { get; private set; }
+                        public bool Mon { get; private set; }
+                        public bool Tue { get; private set; }
+                        public bool Weds { get; private set; }
+                        public bool Thur { get; private set; }
+                        public bool Fri { get; private set; }
+                        public bool Sat { get; private set; }
+                        public bool Sun { get; private set; }
                         public string RateDescription { get; private set; }
                         public string BaseByGuestAmts_BeforeTax { get; private set; }
                         public string BaseByGuestAmts_AfterTax { get; private set; }
                         public string CurrencyCode { get; private set; }
-                        public Rate(string currencyCode, string baseByGuestAmts_BeforeTax, string baseByGuestAmts_AfterTax, string rateDescription)
+                        public Rate(DateTime start,
+                                    DateTime end, 
+                                    string currencyCode, 
+                                    string baseByGuestAmts_BeforeTax, 
+                                    string baseByGuestAmts_AfterTax, 
+                                    string rateDescription,
+                                    bool mon = true, bool tue = true, bool weds = true, bool thur = true, bool fri = true, bool sat = true, bool sun = true)
                         {
-                            if(rateDescription != null)
+                            if (DateTime.Compare(start, end) > 0 || (end - DateTime.Today).TotalDays > 400)
+                            {
+                                throw new Exception("Rate: invalid dates.");
+                            }
+
+                            Start = start.ToString("yyyy-MM-dd");
+                            End = end.ToString("yyyy-MM-dd");
+     
+                            Mon = mon;
+                            Tue = tue;
+                            Weds = weds;
+                            Thur = thur;
+                            Fri = fri;
+                            Sat = sat;
+                            Sun = sun;
+                            if (rateDescription != null)
                             {
                                 if(rateDescription.Length > 255)
                                 {
