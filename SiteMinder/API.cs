@@ -17,9 +17,9 @@ namespace pmsXchange
             {"BookingButton", "BBN"},
             {"Expedia", "EXP"}
         };
-       // comboBox1.DataSource = new BindingSource(userCache, null);
-        //comboBox1.DisplayMember = "Key";
-       // comboBox1.ValueMember = "Value";
+        // comboBox1.DataSource = new BindingSource(userCache, null);
+        // comboBox1.DisplayMember = "Key";
+        // comboBox1.ValueMember = "Value";
 
         public enum Restrictions
         {
@@ -472,7 +472,6 @@ namespace pmsXchange
                 //
                 // Optional minimum and maxumum lengths of stay specified by minTime and maxTime.
                 //
-
                 //
                 // Set availability by specifing the booking limit.
                 //
@@ -715,16 +714,19 @@ namespace pmsXchange
                             bSM.RestrictionStatus.Status = AvailabilityStatusType.Open;
                             bSM.RestrictionStatus.StatusSpecified = true;
                         }
+
                         if (aSM.RestricitionStatusNode.Status == "Close")
                         {
                             bSM.RestrictionStatus.Status = AvailabilityStatusType.Close;
                             bSM.RestrictionStatus.StatusSpecified = true;
                         }
+
                         if (aSM.RestricitionStatusNode.Restriction == "Arrival")
                         {
                             bSM.RestrictionStatus.Restriction = RatePlanTypeRestrictionStatusRestriction.Arrival;
                             bSM.RestrictionStatus.RestrictionSpecified = true;
                         }
+
                         if (aSM.RestricitionStatusNode.Restriction == "Departure")
                         {
                             bSM.RestrictionStatus.Restriction = RatePlanTypeRestrictionStatusRestriction.Departure;
