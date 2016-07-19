@@ -42,12 +42,40 @@ namespace OTA_Console
             InitializeComponent();
         }
 
+        //
+        // HERE IS THE SIMPLEST EXAMPLE OF A CALL TO SITEMINDER PMSXCHANGE.  THIS CLICK HANDLER FOR THE "PING" BUTTON
+        // WILL SEND A PING WITH AUTHENTICATION INFO AND CHECK IF THE SERVER IS ALIVE.
+        //
+        private async void button_Ping_Click(object sender, RoutedEventArgs e)
+        {
+            WriteResponseLine(string.Format("Sending OTA_PingRQ..."));
+            textBlock_Ping.Text = "Sending...";
+            PingRQResponse pingResponse = await OTA_PingRQ(username, password);
+            if (pingResponse.OTA_PingRS.Items[0].GetType() == typeof(SuccessType))
+            {
+                textBlock_Ping.Text = pingResponse.OTA_PingRS.Items[1].ToString();
+                WriteResponseLine(string.Format("OTA_PingRS success!"));
+            }
+            else
+            {
+                string timestamp = pingResponse.OTA_PingRS.TimeStamp.ToString();
+                ErrorsType errors = (ErrorsType)pingResponse.OTA_PingRS.Items[0];
+
+                foreach (var error in errors.Error)
+                {
+                    textBlock_Ping.Text = "Error";
+                    WriteResponseLine(string.Format("OTA_PingRS error - Timestamp: {2},  Type: {0},  Value: {1}", error.Type, error.Value, timestamp));
+                }
+            }
+
+            WriteResponseLine(string.Format(""));
+
+        }
+
         private async void button_HotelRateAmountNotif_Click(object sender, RoutedEventArgs e)
         {
-
-
             //
-            // Set up one or more RateAmountMessage.
+            // Set up one or more RateAmountMessage.  Just using some random data.
             //
 
             #region RateAmountMessages setup
@@ -108,7 +136,7 @@ namespace OTA_Console
             List<AvailStatusMessage> availStatusMessageList = new List<AvailStatusMessage>();
 
             //
-            // Set up one or more AvailStatusMessage.
+            // Set up one or more AvailStatusMessage.  Just using some random data.
             //
 
             DateTime start = new DateTime(2016, 8, 15);
@@ -144,32 +172,7 @@ namespace OTA_Console
             WriteResponseLine(string.Format(""));
 
         }
-        private async void button_Ping_Click(object sender, RoutedEventArgs e)
-        {
-            WriteResponseLine(string.Format("Sending OTA_PingRQ..."));
-            textBlock_Ping.Text = "Sending...";
-            PingRQResponse pingResponse = await OTA_PingRQ(username, password);
-            if (pingResponse.OTA_PingRS.Items[0].GetType() == typeof(SuccessType))
-            {
-                textBlock_Ping.Text = pingResponse.OTA_PingRS.Items[1].ToString();
-                WriteResponseLine(string.Format("OTA_PingRS success!"));
-            }
-            else
-            {
-                string timestamp = pingResponse.OTA_PingRS.TimeStamp.ToString();
-                ErrorsType errors = (ErrorsType)pingResponse.OTA_PingRS.Items[0];
-
-                foreach (var error in errors.Error)
-                {
-                    textBlock_Ping.Text = "Error";
-                    WriteResponseLine(string.Format("OTA_PingRS error - Timestamp: {2},  Type: {0},  Value: {1}", error.Type, error.Value, timestamp));
-                }
-            }
-
-            WriteResponseLine(string.Format(""));
-
-        }
-
+  
         private void WriteResponseLine(string responseLine)
         {
             listBox_Responses.Items.Add(responseLine);
