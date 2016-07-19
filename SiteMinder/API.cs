@@ -11,15 +11,18 @@ namespace pmsXchange
 {
     public static class API
     {
+
+        //
+        // These are a small sample of booking agent codes taken from the SiteMinder web site.  Unfortunately, they do not currently provide
+        // and API (yet) to obtain these codes programmatically
+        //
+
         static SortedDictionary<string, string> Booking_Agent_Codes = new SortedDictionary<string, string>
         {
             {"Booking.com", "BDC"},
             {"BookingButton", "BBN"},
             {"Expedia", "EXP"}
         };
-        // comboBox1.DataSource = new BindingSource(userCache, null);
-        // comboBox1.DisplayMember = "Key";
-        // comboBox1.ValueMember = "Value";
 
         public enum Restrictions
         {
@@ -608,11 +611,24 @@ namespace pmsXchange
                 body.RateAmountMessages.HotelCode = rateAmountMessages.HotelCode;
                 body.RateAmountMessages.RateAmountMessage = new RateAmountMessageType[rateAmountMessages.RateAmountMessageNodeList.Count];
 
+                //
+                // IMPORTANT NOTE:
+                //  There was a slight error made in filling out the body elements for this request.  I delegted the bad code
+                //  and left this framework.  Use thde codel in the OTA_HotelAvailNotifR API as a model to complete it.
+
+                /*
                 int index = 0;
 
                 foreach (RateAmountMessages.RateAmountMessage rAM in rateAmountMessages.RateAmountMessageNodeList)
                 {
                 }
+                */
+
+                //
+                // Send rates update.
+                //
+
+                response = await service.HotelRateAmountNotifRQAsync(CreateSecurityHeader(usernameAuthenticate, passwordAuthenticate), body).ConfigureAwait(false);
             }
             catch (NullReferenceException)
             {
